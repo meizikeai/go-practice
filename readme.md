@@ -44,6 +44,10 @@ https://github.com/meizikeai/go-practice.git
   + http://127.0.0.1:8080
   + http://127.0.0.1:8080/api/test
 
+#### 自动部署
+
+如果使用 GitLab 作仓库，可以使用 https://github.com/meizikeai/gitlab-golang-shell.git 跑CI/CD，项目默认有 .gitlab-ci.yml 文件，请君参考！
+
 #### 学习资料
 
 **Go 语言设计与实现**
