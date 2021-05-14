@@ -1,11 +1,12 @@
 package main
 
 import (
+	"os"
+	"time"
+
 	"go-practice/libs/log"
 	"go-practice/libs/tool"
 	"go-practice/routers"
-	"os"
-	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

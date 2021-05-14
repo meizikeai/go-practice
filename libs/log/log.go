@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
 
 func HandleLogger(app string) {

@@ -3,12 +3,12 @@ package tool
 import (
 	"crypto/rand"
 	"encoding/json"
-	"go-practice/libs/types"
 	"math/big"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
+	"go-practice/libs/types"
 
+	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
 

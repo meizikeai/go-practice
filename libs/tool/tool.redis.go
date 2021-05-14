@@ -3,12 +3,14 @@ package tool
 import (
 	"context"
 	"encoding/json"
-	"go-practice/libs/types"
 	"io/ioutil"
 	"os"
 	"strings"
 
+	"go-practice/libs/types"
+
 	"github.com/go-redis/redis/v8"
+
 	log "github.com/sirupsen/logrus"
 )
 

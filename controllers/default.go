@@ -1,14 +1,16 @@
 package controllers
 
 import (
+	"net/http"
+
 	"go-practice/libs/jwt"
 	"go-practice/libs/request"
 	"go-practice/libs/tool"
 	"go-practice/libs/types"
 	"go-practice/models"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
+
 	log "github.com/sirupsen/logrus"
 )
 
