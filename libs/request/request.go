@@ -14,7 +14,6 @@ import (
 )
 
 func GET(reqUrl string, reqParams types.MapStringString, headers types.MapStringString) ([]byte, error) {
-	var req *http.Request
 	result := []byte{}
 
 	params := url.Values{}
@@ -32,7 +31,7 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 	urlPath.RawQuery = params.Encode()
 	url := urlPath.String()
 
-	req, err = http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 
 	if err != nil {
 		log.Error(err)
@@ -73,11 +72,10 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 }
 
 func POST(reqUrl string, body types.MapStringInterface, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
-	var req *http.Request
 	result := []byte{}
 
 	data, _ := json.Marshal(body)
-	req, err := http.NewRequest("POST", reqUrl, bytes.NewBuffer(data))
+	req, err := http.NewRequest(http.MethodPost, reqUrl, bytes.NewBuffer(data))
 
 	if err != nil {
 		log.Error(err)
@@ -110,8 +108,6 @@ func POST(reqUrl string, body types.MapStringInterface, params types.MapStringSt
 		return result, err
 	}
 
-	defer res.Body.Close()
-
 	result, err = ioutil.ReadAll(res.Body)
 
 	if err != nil {
@@ -126,6 +122,8 @@ func POST(reqUrl string, body types.MapStringInterface, params types.MapStringSt
 	}
 
 	log.Info(string(tool.MarshalJson(record)))
+
+	defer res.Body.Close()
 
 	return result, err
 }
