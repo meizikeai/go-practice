@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	"go-practice/libs/tool"
 	"go-practice/libs/types"
@@ -46,7 +47,10 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 		}
 	}
 
-	pool := &http.Client{}
+	pool := &http.Client{
+		Timeout: 200 * time.Millisecond,
+	}
+
 	res, err := pool.Do(req)
 
 	if err != nil {
@@ -100,7 +104,10 @@ func POST(reqUrl string, body types.MapStringInterface, params types.MapStringSt
 		}
 	}
 
-	pool := &http.Client{}
+	pool := &http.Client{
+		Timeout: 200 * time.Millisecond,
+	}
+
 	res, err := pool.Do(req)
 
 	if err != nil {
