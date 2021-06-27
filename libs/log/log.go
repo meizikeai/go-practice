@@ -24,8 +24,6 @@ func HandleLogger(app string) {
 		errorPath = pwd + "/logs/error.log"
 	}
 
-	// logrus.SetReportCaller(true)
-
 	infoer, _ := rotatelogs.New(
 		infoPath+".%Y-%m-%d",
 		rotatelogs.WithLinkName(infoPath),

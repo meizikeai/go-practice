@@ -28,14 +28,11 @@ func main() {
 	pwd, _ := os.Getwd()
 	router := gin.Default()
 
-	// 静态资源
 	router.Static("/public", pwd+"/public")
 	router.StaticFile("/favicon.ico", pwd+"/public/favicon.ico")
 
-	// 静态模板
 	router.LoadHTMLGlob("views/*")
 
-	// 跨域共享
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://foo.com"},
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET", "DELETE"},
@@ -48,12 +45,9 @@ func main() {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	// 访问记录
 	router.Use(log.AccessLogger("go-practice"))
 
-	// 站点路由
 	routers.HandleRouter(router)
 
-	// 监听端口
 	router.Run(":8080")
 }
