@@ -15,8 +15,9 @@ import (
 func init() {
 	tool.HandleZookeeperConfig()
 
-	tool.HandleLocalMysqlConfig()
-	tool.HandleLocalRedisConfig()
+	// not recommended for use
+	// tool.HandleLocalMysqlConfig()
+	// tool.HandleLocalRedisConfig()
 
 	tool.HandleMySQLClient()
 	tool.HandleRedisClient()

@@ -2,6 +2,7 @@ package models
 
 import (
 	"go-practice/libs/tool"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -53,7 +54,6 @@ func AddPerson(v []string) (id int64, err error) {
 
 func GetPersons() (result []Person, err error) {
 	pool := tool.GetMySQLClient("default.master")
-	persons := make([]Person, 0)
 	res, err := pool.Query("SELECT id, email, name, national, gender, idcard, phone, address, postcode, datetime FROM test_user_info")
 
 	if err != nil {
@@ -83,7 +83,7 @@ func GetPersons() (result []Person, err error) {
 		// creattime := time.Unix(creat.Unix(), 0).Format("2006-01-02 15:04:05")
 
 		person.Datetime = datetime
-		result = append(persons, person)
+		result = append(result, person)
 	}
 
 	return result, err
@@ -132,4 +132,30 @@ func UpdatePerson(name string, phone string, email string) (ra int64, err error)
 	ra, err = res.RowsAffected()
 
 	return ra, err
+}
+
+func GetMySQL() (result []Person, err error) {
+	pool := tool.GetMySQLClient("activity.slave")
+	res, err := pool.Query("SELECT * FROM KAFKA_ACTIVITY_TEST_20191125 LIMIT 0,10")
+
+	if err != nil {
+		log.Error(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var person Person
+
+		res.Scan(
+			&person.Id,
+		)
+
+		creattime := time.Now().Format("2006-01-02 15:04:05")
+
+		person.Datetime = creattime
+		result = append(result, person)
+	}
+
+	return result, err
 }

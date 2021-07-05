@@ -43,8 +43,11 @@ func Home(c *gin.Context) {
 	log.Info(redis)
 
 	// test mysql
-	email := "admin@bank.com"
-	mysql, _ := models.GetPerson(email)
+	// email := "admin@bank.com"
+	// mysql, _ := models.GetPerson(email)
+	// log.Info(string(tool.MarshalJson(mysql)))
+
+	mysql, _ := models.GetMySQL()
 	log.Info(string(tool.MarshalJson(mysql)))
 
 	// test log
