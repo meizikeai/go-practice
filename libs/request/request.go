@@ -3,12 +3,12 @@ package request
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
 
-	"go-practice/libs/tool"
 	"go-practice/libs/types"
 
 	log "github.com/sirupsen/logrus"
@@ -65,17 +65,13 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 		return result, err
 	}
 
-	record := types.MapStringInterface{
-		"url":    urlPath.String(),
-		"result": result,
-	}
-
-	log.Info(string(tool.MarshalJson(record)))
+	record := fmt.Sprintf("url:%s, result:%s", req.URL.String(), string(result))
+	log.Info(record)
 
 	return result, err
 }
 
-func POST(reqUrl string, body types.MapStringInterface, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
+func POST(reqUrl string, body interface{}, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
 	result := []byte{}
 
 	data, _ := json.Marshal(body)
@@ -122,13 +118,63 @@ func POST(reqUrl string, body types.MapStringInterface, params types.MapStringSt
 		return result, err
 	}
 
-	record := types.MapStringInterface{
-		"url":    req.URL.String(),
-		"body":   data,
-		"result": result,
+	record := fmt.Sprintf("url:%s, body:%s, result:%s", req.URL.String(), string(data), string(result))
+	log.Info(record)
+
+	defer res.Body.Close()
+
+	return result, err
+}
+
+func DELETE(reqUrl string, body interface{}, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
+	result := []byte{}
+
+	data, _ := json.Marshal(body)
+	req, err := http.NewRequest(http.MethodPost, reqUrl, bytes.NewBuffer(data))
+
+	if err != nil {
+		log.Error(err)
+		return result, err
 	}
 
-	log.Info(string(tool.MarshalJson(record)))
+	req.Header.Set("Content-Type", "application/json")
+
+	q := req.URL.Query()
+
+	if params != nil {
+		for key, val := range params {
+			q.Add(key, val)
+		}
+
+		req.URL.RawQuery = q.Encode()
+	}
+
+	if headers != nil {
+		for key, val := range headers {
+			req.Header.Add(key, val)
+		}
+	}
+
+	pool := &http.Client{
+		Timeout: 200 * time.Millisecond,
+	}
+
+	res, err := pool.Do(req)
+
+	if err != nil {
+		log.Error(err)
+		return result, err
+	}
+
+	result, err = ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		log.Error(err)
+		return result, err
+	}
+
+	record := fmt.Sprintf("url:%s, body:%s, result:%s", req.URL.String(), string(data), string(result))
+	log.Info(record)
 
 	defer res.Body.Close()
 

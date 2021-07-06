@@ -44,3 +44,9 @@ type ConnMySQLMax struct {
 	MaxIdleConn int   `json:"MaxIdleConn"`
 	MaxOpenConn int   `json:"MaxOpenConn"`
 }
+
+type Response struct {
+	Code    int64       `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
