@@ -21,6 +21,8 @@ func init() {
 
 	tool.HandleMySQLClient()
 	tool.HandleRedisClient()
+	// tool.HandleKafkaProducerClient()
+	// tool.HandleKafkaConsumerClient()
 
 	log.HandleLogger("go-practice")
 }
@@ -49,6 +51,9 @@ func main() {
 	router.Use(log.AccessLogger("go-practice"))
 
 	routers.HandleRouter(router)
+
+	// kafka consumer
+	// tool.HandlerKafkaConsumerMessage("broker", "topic")
 
 	router.Run(":8080")
 }

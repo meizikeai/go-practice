@@ -15,6 +15,9 @@ import (
 )
 
 func Home(c *gin.Context) {
+	// kafka producer
+	// tool.SendKafkaProducerMessage("broker", "topic", "sync", "test")
+
 	// Server Api Host
 	con := tool.GetZookeeperServerConfig()
 	log.Info(con["send"])
