@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
+	"go-practice/libs/fetch"
 	"go-practice/libs/jwt"
-	"go-practice/libs/request"
 	"go-practice/libs/tool"
 	"go-practice/libs/types"
 	"go-practice/models"
@@ -59,7 +59,7 @@ func Home(c *gin.Context) {
 	// test get
 	// https://iactivity.blued.com/api/server/time
 	getparams := types.MapStringString{"type": "1"}
-	get, _ := request.GET("https://iactivity-test.blued.com/api/server/time", getparams, nil)
+	get, _ := fetch.GET("https://iactivity-test.blued.com/api/server/time", getparams, nil)
 	// log.Info(string(get))
 
 	// test post
@@ -67,7 +67,7 @@ func Home(c *gin.Context) {
 	postparams := types.MapStringString{"type": "1"}
 	postbody := types.MapStringInterface{"uid": 113}
 
-	post, _ := request.POST("https://iactivity-test.blued.com/api/getip", postbody, postparams, nil)
+	post, _ := fetch.POST("https://iactivity-test.blued.com/api/getip", postbody, postparams, nil)
 	// log.Info(string(post))
 
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{

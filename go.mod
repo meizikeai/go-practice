@@ -6,11 +6,10 @@ require (
 	github.com/Shopify/sarama v1.29.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-gonic/gin v1.7.1
+	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/validator/v10 v10.6.0 // indirect
-	github.com/go-redis/redis/v8 v8.8.2
+	github.com/go-redis/redis/v8 v8.11.3
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
@@ -23,6 +22,4 @@ require (
 	github.com/samuel/go-zookeeper v0.0.0-20201211165307-7117e9ea2414
 	github.com/sirupsen/logrus v1.8.1
 	github.com/ugorji/go v1.2.5 // indirect
-	go.opentelemetry.io/otel v0.20.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
