@@ -1,6 +1,10 @@
 package tool
 
-import "go-practice/libs/types"
+type response struct {
+	Code    int64       `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
 
 var empty = []string{}
 var responseMessage = map[int64]string{
@@ -14,7 +18,7 @@ var responseMessage = map[int64]string{
 	500: "未知错误，请检查您的网络",
 }
 
-func NewResponse(code int64, data interface{}) *types.Response {
+func NewResponse(code int64, data interface{}) *response {
 	message := ""
 
 	if _, ok := responseMessage[code]; ok {
@@ -25,7 +29,7 @@ func NewResponse(code int64, data interface{}) *types.Response {
 		data = empty
 	}
 
-	return &types.Response{
+	return &response{
 		Code:    code,
 		Message: message,
 		Data:    data,

@@ -6,7 +6,6 @@ import (
 	"go-practice/libs/fetch"
 	"go-practice/libs/jwt"
 	"go-practice/libs/tool"
-	"go-practice/libs/types"
 	"go-practice/models"
 
 	"github.com/gin-gonic/gin"
@@ -58,14 +57,14 @@ func Home(c *gin.Context) {
 
 	// test get
 	// https://iactivity.blued.com/api/server/time
-	getparams := types.MapStringString{"type": "1"}
+	getparams := map[string]string{"type": "1"}
 	get, _ := fetch.GET("https://iactivity-test.blued.com/api/server/time", getparams, nil)
 	// log.Info(string(get))
 
 	// test post
 	// https://iactivity.blued.com/api/getip
-	postparams := types.MapStringString{"type": "1"}
-	postbody := types.MapStringInterface{"uid": 113}
+	postparams := map[string]string{"type": "1"}
+	postbody := map[string]interface{}{"uid": 113}
 
 	post, _ := fetch.POST("https://iactivity-test.blued.com/api/getip", postbody, postparams, nil)
 	// log.Info(string(post))

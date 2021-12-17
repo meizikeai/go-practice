@@ -6,8 +6,6 @@ import (
 	"math/big"
 	"os"
 
-	"go-practice/libs/types"
-
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
@@ -22,8 +20,8 @@ func MarshalJson(date interface{}) []byte {
 	return res
 }
 
-func UnmarshalJson(date string) types.MapStringInterface {
-	var res types.MapStringInterface
+func UnmarshalJson(date string) map[string]interface{} {
+	var res map[string]interface{}
 
 	_ = json.Unmarshal([]byte(date), &res)
 

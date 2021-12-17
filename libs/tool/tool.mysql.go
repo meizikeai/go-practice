@@ -16,9 +16,9 @@ import (
 )
 
 var connMySQL = types.ConnMySQLMax{
-	MaxLifetime: 4,
-	MaxIdleConn: 200,
-	MaxOpenConn: 200,
+	MaxLifetime: 300,
+	MaxIdleConn: 300,
+	MaxOpenConn: 600,
 }
 var fullDbMySQL map[string][]*sql.DB
 var mysqlConfig types.FullConfMySQL
@@ -105,7 +105,7 @@ func createMySQLClient(config types.OutConfMySQL) *sql.DB {
 		log.Fatal(err)
 	}
 
-	db.SetConnMaxLifetime(time.Duration(connMySQL.MaxLifetime) * time.Hour)
+	db.SetConnMaxLifetime(time.Second * time.Duration(connMySQL.MaxLifetime))
 	db.SetMaxIdleConns(connMySQL.MaxIdleConn)
 	db.SetMaxOpenConns(connMySQL.MaxOpenConn)
 
@@ -131,18 +131,18 @@ func handleMySQLClient(addr string, username string, password string, database s
 	return client
 }
 
-// 连接、读、写超时请需调整，默认一秒
+// 连接、读、写超时请安需调整，默认一秒
 func createDSN(addr string, user string, passwd string, dbname string) string {
 	config := mysql.Config{
-		User:             user,                           // Username
-		Passwd:           passwd,                         // Password (requires User)
-		Net:              "tcp",                          // Network type - default: "tcp"
-		Addr:             addr,                           // Network address (requires Net)
-		DBName:           dbname,                         // Database name
-		MaxAllowedPacket: 4194304,                        // Max packet size allowed  - default: 4194304
-		Timeout:          time.Second * time.Duration(1), // Dial timeout
-		ReadTimeout:      time.Second * time.Duration(1), // I/O read timeout
-		WriteTimeout:     time.Second * time.Duration(1), // I/O write timeout
+		User:             user,                            // Username
+		Passwd:           passwd,                          // Password (requires User)
+		Net:              "tcp",                           // Network type - default: "tcp"
+		Addr:             addr,                            // Network address (requires Net)
+		DBName:           dbname,                          // Database name
+		MaxAllowedPacket: 4194304,                         // Max packet size allowed  - default: 4194304
+		Timeout:          time.Second * time.Duration(10), // Dial timeout
+		ReadTimeout:      time.Second * time.Duration(30), // I/O read timeout
+		WriteTimeout:     time.Second * time.Duration(60), // I/O write timeout
 
 		AllowNativePasswords: true, // Allows the native password authentication method - default: true
 		CheckConnLiveness:    true, // Check connections for liveness before using them - default: true

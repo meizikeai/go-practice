@@ -8,20 +8,15 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	"go-practice/libs/types"
-
-	log "github.com/sirupsen/logrus"
 )
 
-func GET(reqUrl string, reqParams types.MapStringString, headers types.MapStringString) ([]byte, error) {
+func GET(reqUrl string, reqParams map[string]string, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	params := url.Values{}
 	urlPath, err := url.Parse(reqUrl)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
@@ -35,7 +30,6 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
@@ -54,31 +48,28 @@ func GET(reqUrl string, reqParams types.MapStringString, headers types.MapString
 	res, err := pool.Do(req)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
 	result, err = ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
-	record := fmt.Sprintf("url:%s, result:%s", req.URL.String(), string(result))
-	log.Info(record)
+	// record := fmt.Sprintf("url:%s, result:%s", req.URL.String(), string(result))
+	// fmt.Println(record)
 
 	return result, err
 }
 
-func POST(reqUrl string, body interface{}, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
+func POST(reqUrl string, body interface{}, params map[string]string, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	data, _ := json.Marshal(body)
 	req, err := http.NewRequest(http.MethodPost, reqUrl, bytes.NewBuffer(data))
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
@@ -107,33 +98,30 @@ func POST(reqUrl string, body interface{}, params types.MapStringString, headers
 	res, err := pool.Do(req)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
 	result, err = ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
-	record := fmt.Sprintf("url:%s, body:%s, result:%s", req.URL.String(), string(data), string(result))
-	log.Info(record)
+	// record := fmt.Sprintf("url:%s, body:%s, result:%s", req.URL.String(), string(data), string(result))
+	// fmt.Println(record)
 
 	defer res.Body.Close()
 
 	return result, err
 }
 
-func DELETE(reqUrl string, body interface{}, params types.MapStringString, headers types.MapStringString) ([]byte, error) {
+func DELETE(reqUrl string, body interface{}, params map[string]string, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	data, _ := json.Marshal(body)
 	req, err := http.NewRequest(http.MethodDelete, reqUrl, bytes.NewBuffer(data))
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
@@ -162,19 +150,17 @@ func DELETE(reqUrl string, body interface{}, params types.MapStringString, heade
 	res, err := pool.Do(req)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
 	result, err = ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Error(err)
 		return result, err
 	}
 
 	record := fmt.Sprintf("url:%s, body:%s, result:%s", req.URL.String(), string(data), string(result))
-	log.Info(record)
+	fmt.Println(record)
 
 	defer res.Body.Close()
 

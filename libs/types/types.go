@@ -1,8 +1,5 @@
 package types
 
-type MapStringInterface map[string]interface{}
-type MapStringString map[string]string
-
 type ConfMySQL struct {
 	Master   []string `json:"master"`
 	Slave    []string `json:"slave"`
@@ -42,10 +39,4 @@ type ConnMySQLMax struct {
 	MaxLifetime int64 `json:"MaxLifetime"`
 	MaxIdleConn int   `json:"MaxIdleConn"`
 	MaxOpenConn int   `json:"MaxOpenConn"`
-}
-
-type Response struct {
-	Code    int64       `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
 }

@@ -6,13 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"time"
 
 	"go-practice/conf"
 	"go-practice/libs/types"
 
 	"github.com/samuel/go-zookeeper/zk"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,13 +20,13 @@ type confZookeeper map[string]map[string]string
 
 var zookeeperMySQL types.FullConfMySQL
 var zookeeperRedis types.FullConfRedis
-var zookeeperServer types.MapStringString
-var zookeeperString types.MapStringString
+var zookeeperServer map[string]string
+var zookeeperString map[string]string
 
 func HandleZookeeperConfig() {
 	zkList := conf.Release
 
-	mode := os.Getenv("GIN_MODE")
+	mode := os.Getenv("URS_MODE")
 
 	if mode != "release" {
 		zkList = conf.Test
@@ -58,7 +58,7 @@ func HandleZookeeperConfig() {
 
 			zookeeperRedis = config
 		} else if k == "string" {
-			config := make(types.MapStringString)
+			config := make(map[string]string)
 
 			for key, val := range v {
 				back := getZookeeperGet(pool, val)
@@ -66,8 +66,17 @@ func HandleZookeeperConfig() {
 			}
 
 			zookeeperString = config
+		} else if k == "kafka" {
+			config := make(map[string]string)
+
+			for key, val := range v {
+				back := getKafkaZookeeperChildren(pool, key, val)
+				config[key] = back
+			}
+
+			zookeeperString = config
 		} else {
-			config := make(types.MapStringString)
+			config := make(map[string]string)
 
 			for key, val := range v {
 				back := getServerZookeeperChildren(pool, key, val)
@@ -79,11 +88,11 @@ func HandleZookeeperConfig() {
 	}
 }
 
-func GetZookeeperServerConfig() types.MapStringString {
+func GetZookeeperServerConfig() map[string]string {
 	return zookeeperServer
 }
 
-func GetZookeeperStringConfig() types.MapStringString {
+func GetZookeeperStringConfig() map[string]string {
 	return zookeeperString
 }
 
@@ -222,6 +231,29 @@ func getServerZookeeperChildren(pool *zk.Conn, key string, path string) string {
 
 	i := GetRandmod(len(back))
 	result = back[i]
+
+	return result
+}
+
+func getKafkaZookeeperChildren(pool *zk.Conn, key string, path string) string {
+	var result string
+
+	back, _, err := pool.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res := string(back)
+	list := strings.Split(res, ",")
+
+	for k, v := range list {
+		if k+1 == len(list) {
+			result += v + ":9092"
+		} else {
+			result += v + ":9092,"
+		}
+	}
 
 	return result
 }
