@@ -14,6 +14,16 @@ import (
 )
 
 func Home(c *gin.Context) {
+	// res, err := ursdk.GetUsersCount(c, "0", "love")
+	// fmt.Println(res, err)
+	// fmt.Println(c.Request)
+
+	// for _, v := range c.Request.RemoteAddr {
+
+	// }
+
+	// authorization
+
 	// kafka producer
 	// tool.SendKafkaProducerMessage("broker", "topic", "sync", "test")
 
