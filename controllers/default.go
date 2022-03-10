@@ -13,17 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func Home(c *gin.Context) {
-	// res, err := ursdk.GetUsersCount(c, "0", "love")
-	// fmt.Println(res, err)
-	// fmt.Println(c.Request)
-
-	// for _, v := range c.Request.RemoteAddr {
-
-	// }
-
-	// authorization
-
+func Home(ctx *gin.Context) {
 	// kafka producer
 	// tool.SendKafkaProducerMessage("broker", "topic", "sync", "test")
 
@@ -79,45 +69,45 @@ func Home(c *gin.Context) {
 	post, _ := fetch.POST("https://iactivity-test.blued.com/api/getip", postbody, postparams, nil)
 	// log.Info(string(post))
 
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
 		"title": "GoLang",
 		"get":   string(get),
 		"post":  string(post),
 	})
 }
 
-func NotFound(c *gin.Context) {
-	ctype := c.Request.Header.Get("Content-Type")
+func NotFound(ctx *gin.Context) {
+	ctype := ctx.Request.Header.Get("Content-Type")
 	// test := regexp.MustCompile(`^application\/json$`)
 
 	if ctype == "application/json" {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"status":  403,
 			"message": "Forbidden",
 		})
 	} else {
-		c.HTML(http.StatusOK, "error.tmpl", gin.H{
+		ctx.HTML(http.StatusOK, "error.tmpl", gin.H{
 			"title": "404 page",
 		})
 	}
 }
 
 // ?email=test10@bank.com
-func ApiAddPerson(c *gin.Context) {
-	name := c.DefaultQuery("name", "guest")
-	email := c.Query("email")
+func ApiAddPerson(ctx *gin.Context) {
+	name := ctx.DefaultQuery("name", "guest")
+	email := ctx.Query("email")
 
 	if email != "" {
 		person := []string{email, name, "汉族", "男", "11010199812187756", "13412345678", "北京市朝阳区百子湾路苹果社区B区", "100000"}
 		lastId, _ := models.AddPerson(person)
 
-		c.JSON(http.StatusOK, gin.H{
+		ctx.JSON(http.StatusOK, gin.H{
 			"status":  200,
 			"lastId":  lastId,
 			"message": "Added successfully",
 		})
 	} else {
-		c.JSON(http.StatusOK, gin.H{
+		ctx.JSON(http.StatusOK, gin.H{
 			"status":  400,
 			"message": "Add failed",
 		})
