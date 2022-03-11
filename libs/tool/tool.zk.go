@@ -12,7 +12,7 @@ import (
 	"go-practice/conf"
 	"go-practice/libs/types"
 
-	"github.com/samuel/go-zookeeper/zk"
+	"github.com/go-zookeeper/zk"
 	log "github.com/sirupsen/logrus"
 )
 
