@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"go-practice/libs/log"
-	"go-practice/libs/tool"
 	"go-practice/routers"
 
 	"github.com/gin-contrib/cors"
@@ -13,14 +13,12 @@ import (
 )
 
 func init() {
-	tool.HandleZookeeperConfig()
-
-	// not recommended for use
+	// tool.HandleZookeeperConfig()
 	// tool.HandleLocalMysqlConfig()
 	// tool.HandleLocalRedisConfig()
 
-	tool.HandleMySQLClient()
-	tool.HandleRedisClient()
+	// tool.HandleMySQLClient()
+	// tool.HandleRedisClient()
 	// tool.HandleKafkaProducerClient()
 	// tool.HandleKafkaConsumerClient()
 
@@ -55,5 +53,6 @@ func main() {
 	// kafka consumer
 	// tool.HandlerKafkaConsumerMessage("broker", "topic")
 
+	fmt.Println("Listen and serve on 127.0.0.1:8000")
 	router.Run(":8000")
 }

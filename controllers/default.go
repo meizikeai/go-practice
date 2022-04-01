@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"go-practice/libs/fetch"
 	"go-practice/libs/jwt"
 	"go-practice/libs/tool"
 	"go-practice/models"
@@ -18,8 +17,8 @@ func Home(ctx *gin.Context) {
 	// tool.SendKafkaProducerMessage("broker", "topic", "sync", "test")
 
 	// Server Api Host
-	con := tool.GetZookeeperServerConfig()
-	log.Info(con["send"])
+	// con := tool.GetZookeeperServerConfig()
+	// log.Info(con["send"])
 
 	// EncryptToken
 	j := jwt.NewJWT()
@@ -41,38 +40,34 @@ func Home(ctx *gin.Context) {
 	log.Info(utoken)
 
 	// test redis
-	redis, _ := models.GetUserName()
-	log.Info(redis)
+	// redis, _ := models.GetUserName()
+	// log.Info(redis)
 
 	// test mysql
 	// email := "admin@bank.com"
 	// mysql, _ := models.GetPerson(email)
 	// log.Info(string(tool.MarshalJson(mysql)))
 
-	mysql, _ := models.GetMySQL()
-	log.Info(string(tool.MarshalJson(mysql)))
+	// mysql, _ := models.GetMySQL()
+	// log.Info(string(tool.MarshalJson(mysql)))
 
 	// test log
 	log.Error("this is error test")
 
 	// test get
-	// https://iactivity.blued.com/api/server/time
-	getparams := map[string]string{"type": "1"}
-	get, _ := fetch.GET("https://iactivity-test.blued.com/api/server/time", getparams, nil)
+	// getparams := map[string]string{"type": "1"}
+	// get, _ := fetch.GET("https://www.test.com/api/test", getparams, nil)
 	// log.Info(string(get))
 
 	// test post
-	// https://iactivity.blued.com/api/getip
-	postparams := map[string]string{"type": "1"}
-	postbody := map[string]interface{}{"uid": 113}
+	// postparams := map[string]string{"type": "1"}
+	// postbody := map[string]interface{}{"uid": 113}
 
-	post, _ := fetch.POST("https://iactivity-test.blued.com/api/getip", postbody, postparams, nil)
+	// post, _ := fetch.POST("https://www.test.com/api/test", postbody, postparams, nil)
 	// log.Info(string(post))
 
 	ctx.HTML(http.StatusOK, "index.tmpl", gin.H{
 		"title": "GoLang",
-		"get":   string(get),
-		"post":  string(post),
 	})
 }
 
