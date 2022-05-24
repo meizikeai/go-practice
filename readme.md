@@ -10,16 +10,16 @@ https://github.com/meizikeai/go-practice.git
 
 #### 项目结构
 
-| 路径          | 描述               | 详情 |
-| ------------- | ---------------------- | ---- |
-| conf          | config                 | --   |
-| controllers   | controller             | --   |
-| libs          | lib                    | --   |
-| models        | mysql / redis          | --   |
-| public        | router. Static         | --   |
-| routers       | router                 | --   |
-| views         | router. LoadHTMLGlob   | --   |
-| go.mod        | go modules             | --   |
+| 路径        | 描述                 | 详情 |
+|-------------|----------------------|------|
+| conf        | config               | --   |
+| controllers | controller           | --   |
+| libs        | lib                  | --   |
+| models      | mysql / redis        | --   |
+| public      | router. Static       | --   |
+| routers     | router               | --   |
+| views       | router. LoadHTMLGlob | --   |
+| go.mod      | go modules           | --   |
 
 #### 开发环境
 
@@ -49,6 +49,25 @@ https://github.com/meizikeai/go-practice.git
 如果使用 GitLab 作仓库，可以使用 https://github.com/meizikeai/gitlab-golang-shell.git 跑CI/CD，项目默认有 .gitlab-ci.yml 文件，请君参考！
 
 #### 帮助文档
+
+ `通过以下命令行执行`
+
+```sh
+# 第一步
+$ cd ~/go-practice
+$ GOOS=linux GOARCH=amd64 go build -o go-practice main.go
+
+# 后台运行，关掉终端会停止运行
+$ ~/go-practice/go-practice &
+
+# 后台运行，关掉终端也会继续运行
+$ nohup ~/go-practice/go-practice &
+
+# 第二步
+$ 执行方法见 帮助文档
+$ 项目配置件 /etc/supervisor/conf.d
+$ 执行项目名 go-practice
+```
 
 ```sh
 # program 为 [program:go-practice] 里配置的值
