@@ -14,7 +14,7 @@ import (
 
 func HandleLogger(app string) {
 	pwd, _ := os.Getwd()
-	mode := os.Getenv("GIN_ENV")
+	mode := os.Getenv("GO_ENV")
 
 	infoPath := filepath.Join("/data/logs/", app, "/info.log")
 	errorPath := filepath.Join("/data/logs/", app, "/error.log")
@@ -54,7 +54,7 @@ func HandleLogger(app string) {
 
 func AccessLogger(app string) gin.HandlerFunc {
 	pwd, _ := os.Getwd()
-	mode := os.Getenv("GIN_ENV")
+	mode := os.Getenv("GO_ENV")
 
 	accessPath := filepath.Join("/data/logs/", app, "/access.log")
 
