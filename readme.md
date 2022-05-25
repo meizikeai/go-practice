@@ -37,7 +37,7 @@ https://github.com/meizikeai/go-practice.git
 
 如果 `GO_MODE` 未设定，那么运行的是 `test` 环境。
 
-为了进行写日志区分，增加 `export GO_ENV=debug` 环境变量。
+为确保正确写日志，本地开发添加 `export GO_ENV=debug` 环境变量。
 
 #### 访问地址
 
