@@ -61,7 +61,7 @@ $ GOOS=linux GOARCH=amd64 go build -o go-practice main.go
 $ ~/go-practice/go-practice &
 
 # 后台运行，关掉终端也会继续运行
-$ nohup ~/go-practice/go-practice &
+$ nohup ~/go-practice/go-practice > go-practice.log 2>&1 &
 
 # 第二步
 $ 执行方法见 帮助文档
