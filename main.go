@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"go-practice/libs/log"
+	"go-practice/libs/tool"
 	"go-practice/routers"
 
 	"github.com/gin-contrib/cors"
@@ -26,6 +27,16 @@ func init() {
 }
 
 func main() {
+	tool.SignalHandler(func() {
+		tool.CloseKafka()
+		tool.CloseMySQL()
+		tool.CloseRedis()
+
+		tool.Stdout("Server Shutdown")
+
+		os.Exit(0)
+	})
+
 	pwd, _ := os.Getwd()
 	router := gin.Default()
 
@@ -53,6 +64,6 @@ func main() {
 	// kafka consumer
 	// tool.HandlerKafkaConsumerMessage("broker", "topic")
 
-	fmt.Println("Listen and serve on 127.0.0.1:8000")
+	fmt.Println("Listen and Server running on 127.0.0.1:8000")
 	router.Run(":8000")
 }

@@ -151,3 +151,13 @@ func createDSN(addr string, user string, passwd string, dbname string) string {
 
 	return config.FormatDSN()
 }
+
+func CloseMySQL() {
+	for _, val := range fullDbMySQL {
+		for _, v := range val {
+			v.Close()
+		}
+	}
+
+	Stdout("MySQL Close")
+}
