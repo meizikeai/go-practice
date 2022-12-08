@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func GET(reqUrl string, reqParams map[string]string, headers map[string]string) ([]byte, error) {
+func GET(reqUrl string, reqParams, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	params := url.Values{}
@@ -64,7 +64,7 @@ func GET(reqUrl string, reqParams map[string]string, headers map[string]string) 
 	return result, err
 }
 
-func POST(reqUrl string, body interface{}, params map[string]string, headers map[string]string) ([]byte, error) {
+func POST(reqUrl string, body interface{}, params, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	data, _ := json.Marshal(body)
@@ -116,7 +116,7 @@ func POST(reqUrl string, body interface{}, params map[string]string, headers map
 	return result, err
 }
 
-func DELETE(reqUrl string, body interface{}, params map[string]string, headers map[string]string) ([]byte, error) {
+func DELETE(reqUrl string, body interface{}, params, headers map[string]string) ([]byte, error) {
 	result := []byte{}
 
 	data, _ := json.Marshal(body)

@@ -1,5 +1,8 @@
 package types
 
+type MapStringInterface map[string]interface{}
+type MapStringString map[string]string
+
 type ConfMySQL struct {
 	Master   []string `json:"master"`
 	Slave    []string `json:"slave"`

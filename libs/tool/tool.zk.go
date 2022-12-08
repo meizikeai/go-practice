@@ -20,8 +20,8 @@ type confZookeeper map[string]map[string]string
 
 var zookeeperMySQL types.FullConfMySQL
 var zookeeperRedis types.FullConfRedis
-var zookeeperServer map[string]string
-var zookeeperString map[string]string
+var zookeeperServer types.MapStringString
+var zookeeperString types.MapStringString
 
 func HandleZookeeperConfig() {
 	zkList := conf.Release
@@ -58,7 +58,7 @@ func HandleZookeeperConfig() {
 
 			zookeeperRedis = config
 		} else if k == "string" {
-			config := make(map[string]string)
+			config := make(types.MapStringString)
 
 			for key, val := range v {
 				back := getZookeeperGet(pool, val)
@@ -67,7 +67,7 @@ func HandleZookeeperConfig() {
 
 			zookeeperString = config
 		} else if k == "kafka" {
-			config := make(map[string]string)
+			config := make(types.MapStringString)
 
 			for key, val := range v {
 				back := getKafkaZookeeperChildren(pool, key, val)
@@ -76,7 +76,7 @@ func HandleZookeeperConfig() {
 
 			zookeeperString = config
 		} else {
-			config := make(map[string]string)
+			config := make(types.MapStringString)
 
 			for key, val := range v {
 				back := getServerZookeeperChildren(pool, key, val)
@@ -88,11 +88,11 @@ func HandleZookeeperConfig() {
 	}
 }
 
-func GetZookeeperServerConfig() map[string]string {
+func GetZookeeperServerConfig() types.MapStringString {
 	return zookeeperServer
 }
 
-func GetZookeeperStringConfig() map[string]string {
+func GetZookeeperStringConfig() types.MapStringString {
 	return zookeeperString
 }
 
@@ -220,7 +220,7 @@ func getRedisZookeeperChildren(pool *zk.Conn, path string) types.ConfRedis {
 	return result
 }
 
-func getServerZookeeperChildren(pool *zk.Conn, key string, path string) string {
+func getServerZookeeperChildren(pool *zk.Conn, key, path string) string {
 	var result string
 
 	back, _, err := pool.Children(path)
@@ -235,7 +235,7 @@ func getServerZookeeperChildren(pool *zk.Conn, key string, path string) string {
 	return result
 }
 
-func getKafkaZookeeperChildren(pool *zk.Conn, key string, path string) string {
+func getKafkaZookeeperChildren(pool *zk.Conn, key, path string) string {
 	var result string
 
 	back, _, err := pool.Get(path)
