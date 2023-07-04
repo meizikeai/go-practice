@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option go_package = "./protos";
+
+service TestRpcService {
+  /**
+   * 写入 users 表信息
+   * 把 数据 写入到 users 数据库
+   */
+  rpc addUserData(AddUserDataRequest) returns (AddUserDataResponse);
+
+  /**
+   * 获取 users 表信息
+   * 根据 uid 与 指定的 字段集（必传）返回信息
+   * 返回字符串(map[string]string)，根据需要处理 string to int... 
+   */
+  rpc getUserData(GetUserDataRequest) returns (GetUserDataResponse);
+}
+
+enum Status{
+  FAILED = 0;
+  SUCCESS = 1;
+}
+
+message AddUserDataRequest {
+  string param = 1;
+}
+
+message AddUserDataResponse{
+  Status status = 1;
+  string uid = 2;
+}
+
+message GetUserDataRequest{
+  string uid = 1;
+  string param = 2;
+}
+
+message GetUserDataResponse{
+  Status status = 1;
+  string data = 2;
+}

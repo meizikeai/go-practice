@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -43,8 +42,7 @@ func ApiAuth() gin.HandlerFunc {
 		j := NewJWT()
 
 		claims, err := j.DecryptToken(token)
-
-		fmt.Println("claims", claims)
+		// fmt.Println("claims", claims)
 
 		if err != nil {
 			if err == TokenExpired {

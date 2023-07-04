@@ -8,6 +8,12 @@ import (
 )
 
 func AddApiRouter(router *gin.Engine) {
+	router.NoRoute(controllers.NotFound)
+	router.NoMethod(controllers.NotFound)
+
+	router.GET("/", controllers.SayHi)
+	router.GET("/favicon.ico", controllers.SayHi)
+
 	r := router.Group("/api")
 
 	r.Use(jwt.ApiAuth())

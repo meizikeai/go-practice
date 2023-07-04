@@ -1,8 +1,9 @@
 package models
 
 import (
-	"go-practice/libs/tool"
 	"time"
+
+	"go-practice/libs/tool"
 
 	log "github.com/sirupsen/logrus"
 )

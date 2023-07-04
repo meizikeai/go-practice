@@ -10,16 +10,15 @@ https://github.com/meizikeai/go-practice.git
 
 #### 项目结构
 
-| 路径        | 描述                 | 详情 |
-|-------------|----------------------|------|
-| conf        | config               | --   |
-| controllers | controller           | --   |
-| libs        | lib                  | --   |
-| models      | mysql / redis        | --   |
-| public      | router. Static       | --   |
-| routers     | router               | --   |
-| views       | router. LoadHTMLGlob | --   |
-| go.mod      | go modules           | --   |
+| 路径        | 描述          | 详情 |
+|-------------|---------------|------|
+| config      | config        | --   |
+| controllers | controller    | --   |
+| libs        | lib           | --   |
+| models      | mysql / redis | --   |
+| protos      | protobuf      | --   |
+| routers     | router        | --   |
+| go.mod      | go modules    | --   |
 
 #### 开发环境
 
@@ -112,12 +111,3 @@ $ supervisorctl status
 
   + https://gobyexample.com
   + https://gowebexamples.com
-
-**学习 Go 语言**
-
-  + https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md
-  + https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md
-
-**Go 操作 Redis 实战**
-
-  + https://www.cnblogs.com/itbsl/p/14198111.html

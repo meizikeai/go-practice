@@ -43,3 +43,10 @@ type ConnMySQLMax struct {
 	MaxIdleConns    int   `json:"max_idle_conns"`
 	ConnmaxLifetime int64 `json:"conn_max_life_time"`
 }
+
+type ConfZookeeper map[string]map[string]string
+
+type RequestBody struct {
+	Uid string `json:"uid"`
+	Did string `json:"did"`
+}
