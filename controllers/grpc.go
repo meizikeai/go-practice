@@ -82,7 +82,7 @@ func (p *profile) GetUserData(uid, param string) (*protos.GetUserDataResponse, e
 }
 
 func getAuthHost() string {
-	res := os.Getenv("ALP_MODE")
+	res := os.Getenv("GO_MODE")
 
 	result := "127.0.0.1:9527"
 
