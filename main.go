@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"go-practice/controllers"
 	"go-practice/libs/log"
 	"go-practice/libs/tool"
 	"go-practice/routers"
@@ -14,8 +15,8 @@ import (
 func init() {
 	// tool.HandleZookeeperConfig()
 
-	tool.HandleMySQLClient()
-	tool.HandleRedisClient()
+	// tool.HandleMySQLClient()
+	// tool.HandleRedisClient()
 	// tool.HandleKafkaProducerClient()
 	// tool.HandleKafkaConsumerClient()
 
@@ -35,7 +36,7 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(log.AccessLogger("go-practice"))
+	router.Use(controllers.TraceLogger())
 
 	routers.HandleRouter(router)
 

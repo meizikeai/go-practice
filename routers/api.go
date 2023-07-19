@@ -12,7 +12,7 @@ func AddApiRouter(router *gin.Engine) {
 	router.NoMethod(controllers.NotFound)
 
 	router.GET("/", controllers.SayHi)
-	router.GET("/favicon.ico", controllers.SayHi)
+	// router.GET("/favicon.ico", controllers.SayHi)
 
 	r := router.Group("/api")
 
