@@ -84,10 +84,10 @@ func (p *profile) GetUserData(uid, param string) (*protos.GetUserDataResponse, e
 func getAuthHost() string {
 	res := os.Getenv("GO_MODE")
 
-	result := "127.0.0.1:9527"
+	result := "127.0.0.1:8888"
 
 	if res != "release" {
-		result = "127.0.0.1:9527"
+		result = "127.0.0.1:8888"
 	}
 
 	return result

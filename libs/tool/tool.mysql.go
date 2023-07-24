@@ -8,7 +8,6 @@ import (
 	"go-practice/libs/types"
 
 	"github.com/go-sql-driver/mysql"
-	log "github.com/sirupsen/logrus"
 )
 
 var connMySQL = types.ConnMySQLMax{
@@ -54,7 +53,7 @@ func createMySQLClient(config types.OutConfMySQL) *sql.DB {
 	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	db.SetMaxOpenConns(connMySQL.MaxOpenConns)
@@ -64,7 +63,7 @@ func createMySQLClient(config types.OutConfMySQL) *sql.DB {
 	err = db.Ping()
 
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
 	return db
@@ -111,5 +110,5 @@ func CloseMySQL() {
 		}
 	}
 
-	Stdout("MySQL Close")
+	Stdout("MySQL is Close")
 }

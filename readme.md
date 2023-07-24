@@ -40,8 +40,8 @@ https://github.com/meizikeai/go-practice.git
 
 #### 访问地址
 
-  + http://127.0.0.1:8080
-  + http://127.0.0.1:8080/api/test
+  + http://127.0.0.1:8000
+  + http://127.0.0.1:8000/api/test
 
 #### 自动部署
 

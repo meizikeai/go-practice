@@ -3,11 +3,10 @@ package tool
 import (
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"math/big"
 	"regexp"
 	"strconv"
-
-	log "github.com/sirupsen/logrus"
 )
 
 func Contain(arr []string, element string) bool {
@@ -23,7 +22,7 @@ func MarshalJson(date interface{}) []byte {
 	res, err := json.Marshal(date)
 
 	if err != nil {
-		log.Error(err)
+		fmt.Println(err)
 	}
 
 	return res
