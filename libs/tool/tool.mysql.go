@@ -58,7 +58,7 @@ func createMySQLClient(config types.OutConfMySQL) *sql.DB {
 
 	db.SetMaxOpenConns(connMySQL.MaxOpenConns)
 	db.SetMaxIdleConns(connMySQL.MaxIdleConns)
-	db.SetConnMaxLifetime(time.Second * time.Duration(connMySQL.ConnmaxLifetime))
+	db.SetConnMaxLifetime(time.Duration(connMySQL.ConnmaxLifetime) * time.Second)
 
 	err = db.Ping()
 
@@ -91,9 +91,9 @@ func createDSN(addr, user, passwd, dbname string) string {
 		Addr:             addr,                            // Network address (requires Net)
 		DBName:           dbname,                          // Database name
 		MaxAllowedPacket: 4194304,                         // Max packet size allowed  - default: 4194304
-		Timeout:          time.Second * time.Duration(10), // Dial timeout
-		ReadTimeout:      time.Second * time.Duration(5),  // I/O read timeout
-		WriteTimeout:     time.Second * time.Duration(5),  // I/O write timeout
+		Timeout:          time.Duration(10) * time.Second, // Dial timeout
+		ReadTimeout:      time.Duration(5) * time.Second,  // I/O read timeout
+		WriteTimeout:     time.Duration(5) * time.Second,  // I/O write timeout
 
 		AllowNativePasswords: true, // Allows the native password authentication method - default: true
 		CheckConnLiveness:    true, // Check connections for liveness before using them - default: true

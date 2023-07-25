@@ -16,7 +16,6 @@ var redisConfig = map[string]types.ConfRedis{
 }
 
 func GetRedisConfig() types.FullConfRedis {
-	mode := getMode()
 	result := types.FullConfRedis{}
 
 	data := []string{
@@ -24,7 +23,8 @@ func GetRedisConfig() types.FullConfRedis {
 	}
 
 	for _, v := range data {
-		result[v] = redisConfig[v+"-"+mode]
+		key := getKey(v)
+		result[v] = redisConfig[key]
 	}
 
 	return result

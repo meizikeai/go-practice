@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -22,6 +23,13 @@ func isProduction() bool {
 	if mode == "release" {
 		result = true
 	}
+
+	return result
+}
+
+func getKey(k string) string {
+	mode := getMode()
+	result := fmt.Sprintf("%s-%s", k, mode)
 
 	return result
 }

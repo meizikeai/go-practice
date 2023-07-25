@@ -7,20 +7,19 @@ var mysqlConfig = map[string]types.ConfMySQL{
 		Master:   []string{"127.0.0.1:3306"},
 		Slave:    []string{"127.0.0.1:3306"},
 		Username: "test",
-		Password: "yintai@123",
+		Password: "test@123",
 		Database: "test",
 	},
 	"default-release": {
 		Master:   []string{"127.0.0.1:3306"},
 		Slave:    []string{"127.0.0.1:3306", "127.0.0.1:3306"},
 		Username: "test",
-		Password: "yintai@123",
+		Password: "test@123",
 		Database: "test",
 	},
 }
 
 func GetMySQLConfig() types.FullConfMySQL {
-	mode := getMode()
 	result := types.FullConfMySQL{}
 
 	data := []string{
@@ -28,7 +27,8 @@ func GetMySQLConfig() types.FullConfMySQL {
 	}
 
 	for _, v := range data {
-		result[v] = mysqlConfig[v+"-"+mode]
+		key := getKey(v)
+		result[v] = mysqlConfig[key]
 	}
 
 	return result
