@@ -1,14 +1,13 @@
 package tool
 
-import (
-	"github.com/bwmarrin/snowflake"
-)
+// github.com/rs/xid
+import "github.com/bwmarrin/snowflake"
 
-type Node struct {
+type snow struct {
 	cli *snowflake.Node
 }
 
-var Snowflake Node
+var Snowflake snow
 
 func init() {
 	node, err := snowflake.NewNode(1)
@@ -20,7 +19,7 @@ func init() {
 	Snowflake.cli = node
 }
 
-func (a *Node) GenerateSnowflake() string {
+func (a *snow) GenerateSnowflake() string {
 	result := Snowflake.cli.Generate()
 	return result.String()
 }

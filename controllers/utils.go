@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -60,7 +60,7 @@ func getUserAgent(data string) (os, osVersion, device string) {
 
 func getBody(req *http.Request) types.RequestBody {
 	data := types.RequestBody{}
-	body, err := ioutil.ReadAll(req.Body)
+	body, err := io.ReadAll(req.Body)
 
 	if err != nil {
 		return data
