@@ -1,0 +1,3 @@
+[submodule "protos/proto-practice"]
+	path = protos/proto-practice
+	url = https://github.com/meizikeai/proto-practice.git
