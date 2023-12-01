@@ -5,7 +5,6 @@ import (
 	// "github.com/dlclark/regexp2"
 )
 
-// 检查密码强度
 var checkPasswordRegexp = handleCheckPasswordRegexp()
 
 func handleCheckPasswordRegexp() []*regexp.Regexp {
@@ -23,7 +22,6 @@ func handleCheckPasswordRegexp() []*regexp.Regexp {
 		re, err := regexp.Compile(v)
 
 		if err != nil {
-			// fmt.Println(err)
 			continue
 		}
 
@@ -55,9 +53,14 @@ func CheckPassword(password string, min, max int) int {
 	return level
 }
 
-// 清除非数字符
 var notANumberRegex = regexp.MustCompile(`\D`)
 
 func ClearNotANumber(str string) string {
 	return notANumberRegex.ReplaceAllString(str, "")
+}
+
+var noSpaceRegex = regexp.MustCompile("\\s|\n|\r")
+
+func ClearSpace(str string) string {
+	return noSpaceRegex.ReplaceAllString(str, "")
 }

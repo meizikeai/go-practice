@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"go-practice/controllers"
@@ -24,17 +23,18 @@ func main() {
 		tool.CloseMySQL()
 		tool.CloseRedis()
 
-		tool.Stdout("Server Shutdown")
+		tool.Stdout("The Service is Shutdown")
 
 		os.Exit(0)
 	})
 
 	router := gin.Default()
 
+	router.Use(controllers.ContentEncoding())
 	router.Use(controllers.TraceLogger())
 
 	routers.HandleRouter(router)
 
-	fmt.Println("Listen and Server running on 127.0.0.1:8000")
+	tool.Stdout("The service is running on 127.0.0.1:8000")
 	router.Run(":8000")
 }

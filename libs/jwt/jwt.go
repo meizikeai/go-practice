@@ -2,67 +2,10 @@ package jwt
 
 import (
 	"errors"
-	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
-
-	log "github.com/sirupsen/logrus"
 )
-
-func forbidden(c *gin.Context) {
-	ctype := c.Request.Header.Get("Content-Type")
-
-	if ctype == "application/json" {
-		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-			"status":  403,
-			"message": "Forbidden",
-		})
-	} else {
-		c.Abort()
-		c.String(http.StatusForbidden, "Forbidden")
-	}
-}
-
-func ApiAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token := c.Request.Header.Get("token")
-
-		if token == "" {
-			log.Error("You don't have permission to access / on this server.")
-
-			forbidden(c)
-
-			return
-		}
-
-		log.Print("get token: ", token)
-
-		j := NewJWT()
-
-		claims, err := j.DecryptToken(token)
-		// fmt.Println("claims", claims)
-
-		if err != nil {
-			if err == TokenExpired {
-				log.Error("Token is expired")
-
-				forbidden(c)
-
-				return
-			}
-
-			log.Error(err)
-
-			forbidden(c)
-
-			return
-		}
-
-		c.Set("claims", claims)
-	}
-}
 
 type JWT struct {
 	SigningKey []byte

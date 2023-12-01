@@ -38,11 +38,11 @@ func (hook *Hook) Levels() []logrus.Level {
 func getLogger(file string) *lumberjack.Logger {
 	template := &lumberjack.Logger{
 		Filename:   file,
-		MaxSize:    100,   // 日志文件在轮转之前的最大大小，默认 100 MB
-		MaxBackups: 10,    // 保留旧日志文件的最大数量
-		MaxAge:     15,    // 保留旧日志文件的最大天数
-		Compress:   false, // 是否使用 gzip 对日志文件进行压缩归档
-		LocalTime:  true,  // 是否使用本地时间，默认 UTC 时间
+		MaxSize:    100,   // Maximum log file split size, default 100 MB
+		MaxBackups: 10,    // Maximum number of old log files to keep
+		MaxAge:     15,    // Maximum number of days to keep old log files
+		Compress:   false, // Whether to use gzip to compress and archive log files
+		LocalTime:  true,  // Whether to use local time, default UTC time
 	}
 
 	return template
