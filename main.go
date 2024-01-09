@@ -30,7 +30,6 @@ func main() {
 
 	router := gin.Default()
 
-	router.Use(controllers.ContentEncoding())
 	router.Use(controllers.TraceLogger())
 
 	routers.HandleRouter(router)
