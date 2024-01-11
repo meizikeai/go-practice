@@ -1,11 +1,5 @@
 package controllers
 
-import (
-	"net/http"
-
-	"github.com/mileusna/useragent"
-)
-
 type response struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
@@ -40,14 +34,4 @@ func newResponse(code int, data interface{}) *response {
 		Message: message,
 		Data:    data,
 	}
-}
-
-func getUA(req *http.Request) string {
-	return req.UserAgent()
-}
-
-func getUserAgent(data string) (os, osVersion, device string) {
-	ua := useragent.Parse(data)
-
-	return ua.OS, ua.OSVersion, ua.Device
 }

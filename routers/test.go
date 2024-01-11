@@ -6,13 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddApiRouter(router *gin.Engine) {
-	router.NoRoute(controllers.NotFound)
-	router.NoMethod(controllers.NotFound)
-
-	router.GET("/", controllers.SayHi)
-	router.GET("/favicon.ico", controllers.SayHi)
-
+func AddTestApiRouter(router *gin.Engine) {
 	router.GET("/home", controllers.Home)
 
 	r := router.Group("/api")

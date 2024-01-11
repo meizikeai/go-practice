@@ -10,7 +10,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/mileusna/useragent v1.3.4
 	github.com/sirupsen/logrus v1.9.3
 	go/protos v1.0.0
 	golang.org/x/crypto v0.18.0

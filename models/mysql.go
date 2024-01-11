@@ -6,22 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// test structure
-// CREATE TABLE `test_user_info` (
-//   `id` int NOT NULL AUTO_INCREMENT,
-//   `email` varchar(50) NOT NULL DEFAULT '' COMMENT '用户帐号',
-//   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '用户姓名',
-//   `national` varchar(10) NOT NULL DEFAULT '' COMMENT '民族',
-//   `gender` varchar(10) NOT NULL DEFAULT '' COMMENT '性别',
-//   `idcard` varchar(18) NOT NULL DEFAULT '' COMMENT '身份证号',
-//   `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
-//   `address` varchar(100) NOT NULL DEFAULT '' COMMENT '家庭地址',
-//   `postcode` varchar(6) NOT NULL DEFAULT '' COMMENT '邮编号',
-//   `datetime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-//   PRIMARY KEY (`id`),
-//   UNIQUE KEY `email` (`email`)
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 type Person struct {
 	Id       int    `json:"id" form:"id"`
 	Email    string `json:"email" form:"email"`
@@ -51,35 +35,7 @@ func AddPerson(v []string) (id int64, err error) {
 	return id, err
 }
 
-func GetPerson(email string) (result Person, err error) {
-	var person Person
-
-	pool := tool.GetMySQLClient("default.master")
-	res := pool.QueryRow("SELECT id, email, name, national, gender, idcard, phone, address, postcode, datetime FROM test_user_info WHERE email=?", email)
-
-	err = res.Scan(
-		&person.Id,
-		&person.Email,
-		&person.Name,
-		&person.National,
-		&person.Gender,
-		&person.IdCard,
-		&person.Phone,
-		&person.Address,
-		&person.Postcode,
-		&person.Datetime,
-	)
-
-	if err != nil {
-		log.Error(err)
-	}
-
-	result = person
-
-	return result, err
-}
-
-func GetPersons() (result []Person, err error) {
+func GetPerson() (result []Person, err error) {
 	pool := tool.GetMySQLClient("default.master")
 	res, err := pool.Query("SELECT id, email, name, national, gender, idcard, phone, address, postcode, datetime FROM test_user_info")
 

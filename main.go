@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"go-practice/config"
 	"go-practice/controllers"
 	"go-practice/libs/log"
 	"go-practice/libs/tool"
@@ -20,20 +21,25 @@ func init() {
 
 func main() {
 	tool.SignalHandler(func() {
-		tool.CloseMySQL()
-		tool.CloseRedis()
+		// tool.CloseMySQL()
+		// tool.CloseRedis()
 
 		tool.Stdout("The Service is Shutdown")
 
 		os.Exit(0)
 	})
 
-	router := gin.Default()
+	router := gin.New()
 
+	// logger
 	router.Use(controllers.TraceLogger())
+
+	// recovery
+	router.Use(gin.Recovery())
 
 	routers.HandleRouter(router)
 
+	tool.Stdout("The current environment is " + config.GetMode())
 	tool.Stdout("The service is running on 127.0.0.1:8000")
 	router.Run(":8000")
 }
