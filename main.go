@@ -29,6 +29,7 @@ func main() {
 		os.Exit(0)
 	})
 
+	// gin
 	router := gin.New()
 
 	// logger
@@ -39,7 +40,8 @@ func main() {
 
 	routers.HandleRouter(router)
 
+	port := config.GetPort()
 	tool.Stdout("The current environment is " + config.GetMode())
-	tool.Stdout("The service is running on 127.0.0.1:8000")
-	router.Run(":8000")
+	tool.Stdout("The service is running on 127.0.0.1:" + port)
+	router.Run(":" + port)
 }

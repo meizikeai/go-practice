@@ -10,6 +10,16 @@ var env = []string{
 	"test",
 }
 
+func GetPort() string {
+	res := os.Getenv("GO_PORT")
+
+	if res == "" {
+		panic("The service port is not set")
+	}
+
+	return res
+}
+
 func GetMode() string {
 	pass := false
 	mode := os.Getenv("GO_MODE")

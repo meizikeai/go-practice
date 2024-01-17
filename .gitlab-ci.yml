@@ -13,9 +13,8 @@ variables:
   deploys: /home/work/go-practice
   project: go-practice
   scripts: gitlab-golang-shell
-  # dingtalk: https://oapi.dingtalk.com/robot/send?access_token=XXX
-  feishu: https://open.feishu.cn/open-apis/bot/hook/4cd5df823a244f728bdfc948d752b18e
-  feishuv2: https://open.feishu.cn/open-apis/bot/v2/hook/fd364684-aba9-4dc2-a618-9474dbd67572
+  dingtalk: https://oapi.dingtalk.com/robot/send?access_token=XXX
+  feishu: https://open.feishu.cn/open-apis/bot/v2/hook/XXX
 
 stages:
   - module
