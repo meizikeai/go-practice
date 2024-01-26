@@ -4,9 +4,9 @@ import (
 	"os"
 
 	"go-practice/config"
-	"go-practice/controllers"
 	"go-practice/libs/log"
 	"go-practice/libs/tool"
+	"go-practice/libs/utils"
 	"go-practice/routers"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +33,7 @@ func main() {
 	router := gin.New()
 
 	// logger
-	router.Use(controllers.TraceLogger())
+	router.Use(utils.TraceLogger())
 
 	// recovery
 	router.Use(gin.Recovery())
