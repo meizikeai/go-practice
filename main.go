@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"go-practice/config"
+	"go-practice/controllers"
 	"go-practice/libs/log"
 	"go-practice/libs/tool"
 	"go-practice/libs/utils"
@@ -34,6 +35,14 @@ func main() {
 
 	// logger
 	router.Use(utils.TraceLogger())
+
+	// prometheus
+	router.Use(utils.PromMiddleware(&utils.PromOpts{
+		ExcludeRegexStatus: "404",
+		EndpointLabelMappingFn: func(c *gin.Context) string {
+			return controllers.EndpointLabelMappingFn(c)
+		},
+	}))
 
 	// recovery
 	router.Use(gin.Recovery())
