@@ -2,7 +2,6 @@ package routers
 
 import (
 	"go-practice/controllers"
-	"go-practice/libs/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +11,7 @@ func AddTestApiRouter(router *gin.Engine) {
 
 	r := router.Group("/api")
 
-	r.Use(utils.ApiAuth())
+	r.Use(controllers.ApiAuth())
 	{
 		r.GET("/test", controllers.ApiTest)
 		r.POST("/test", controllers.ApiTest)

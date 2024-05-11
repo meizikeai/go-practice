@@ -1,7 +1,6 @@
-package utils
+package controllers
 
 import (
-	"io"
 	"net/http"
 	"strings"
 
@@ -10,11 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
-
-func getBody(req *http.Request) []byte {
-	data, _ := io.ReadAll(req.Body)
-	return data
-}
 
 func forbidden(c *gin.Context) {
 	ctype := c.Request.Header.Get("Content-Type")
@@ -74,7 +68,7 @@ func ApiAuth() gin.HandlerFunc {
 		}
 
 		// After passing the authentication, get the value of body
-		body := getBody(c.Request)
+		body := getBody(c)
 
 		c.Set("body", body)
 		c.Set("claims", claims)

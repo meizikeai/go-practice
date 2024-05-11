@@ -55,12 +55,12 @@ func CheckPassword(password string, min, max int) int {
 
 var notANumberRegex = regexp.MustCompile(`\D`)
 
-func ClearNotANumber(str string) string {
+func CleanNotANumber(str string) string {
 	return notANumberRegex.ReplaceAllString(str, "")
 }
 
 var noSpaceRegex = regexp.MustCompile("\\s|\n|\r")
 
-func ClearSpace(str string) string {
+func CleanSpace(str string) string {
 	return noSpaceRegex.ReplaceAllString(str, "")
 }

@@ -38,9 +38,10 @@ func GetMode() string {
 	return mode
 }
 
-func isProduction() bool {
-	mode := GetMode()
+func IsProduction() bool {
 	result := false
+
+	mode := GetMode()
 
 	if mode == "release" {
 		result = true

@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var ctx = context.Background()
+var ctx = context.TODO()
 
 func GetUserName() (result string, err error) {
 	pool := tool.GetRedisClient("users.master")
