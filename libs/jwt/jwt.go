@@ -62,7 +62,7 @@ func (j *JWT) EncryptToken(custom Custom) (string, error) {
 }
 
 func (j *JWT) DecryptToken(tokenString string) (*customClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &customClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &customClaims{}, func(token *jwt.Token) (any, error) {
 		return j.SigningKey, nil
 	})
 
@@ -92,7 +92,7 @@ func (j *JWT) UpdateToken(tokenString string) (string, error) {
 		return time.Unix(0, 0)
 	}
 
-	token, err := jwt.ParseWithClaims(tokenString, &customClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &customClaims{}, func(token *jwt.Token) (any, error) {
 		return j.SigningKey, nil
 	})
 

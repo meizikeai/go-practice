@@ -31,12 +31,12 @@ func Home(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    200,
 		"message": "OK",
-		"data":    map[string]interface{}{},
+		"data":    map[string]any{},
 	})
 }
 
 func ApiTest(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, newResponse(http.StatusOK, map[string]interface{}{
+	ctx.JSON(http.StatusOK, newResponse(http.StatusOK, map[string]any{
 		"a": 1,
 		"b": 2,
 		"c": 3,

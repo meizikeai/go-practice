@@ -8,12 +8,12 @@ import (
 )
 
 type response struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
 }
 
-var empty = map[string]interface{}{}
+var empty = map[string]any{}
 var responseMessage = map[int]string{
 	200: "OK",
 	400: "Bad Request",
@@ -25,7 +25,7 @@ var responseMessage = map[int]string{
 	500: "Internal Server Error",
 }
 
-func newResponse(code int, data interface{}) *response {
+func newResponse(code int, data any) *response {
 	message := ""
 
 	if _, ok := responseMessage[code]; ok {
