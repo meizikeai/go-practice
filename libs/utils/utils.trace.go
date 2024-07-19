@@ -2,15 +2,12 @@ package utils
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
 	"go-practice/libs/tool"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 // trace logger
@@ -25,6 +22,7 @@ func (c traceWriter) Write(b []byte) (int, error) {
 }
 
 type traceLog struct {
+	Title   string `json:"title"`
 	Uri     string `json:"uri"`
 	Method  string `json:"method"`
 	Status  int    `json:"status"`
@@ -32,6 +30,7 @@ type traceLog struct {
 	Request string `json:"request"`
 	Body    any    `json:"body,omitempty"`
 	Data    any    `json:"data,omitempty"`
+	Latency any    `json:"latency"`
 }
 
 func TraceLogger() gin.HandlerFunc {
@@ -59,35 +58,31 @@ func TraceLogger() gin.HandlerFunc {
 
 		data := writer.body.String()
 
-		trace := traceLog{
-			Uri:    uri,
-			Method: method,
-			Status: status,
-			Client: client,
-			Body:   tool.UnmarshalJson(body),
-			Data:   tool.UnmarshalJson(data),
-		}
-
-		log.Trace(fmt.Sprintf("%s %s", string(tool.MarshalJson(trace)), latency))
+		HandleTraceLogging(traceLog{
+			Uri:     uri,
+			Method:  method,
+			Status:  status,
+			Client:  client,
+			Body:    tool.UnmarshalJson(body),
+			Data:    tool.UnmarshalJson(data),
+			Latency: latency,
+		})
 	}
 }
 
 func LoggingIllegalEntity(c *gin.Context) {
 	body := tool.CleanSpace(string(getMountBody(c)))
 
-	res := traceLog{
+	HandleWarnLogging(traceLog{
+		Title:   "LoggingIllegalEntity",
 		Uri:     c.Request.RequestURI,
 		Method:  c.Request.Method,
 		Status:  c.Writer.Status(),
 		Client:  c.ClientIP(),
 		Request: getRequestID(c.Request),
 		Body:    tool.UnmarshalJson(body),
-		Data:    nil,
-	}
-
-	data, _ := json.Marshal(res)
-
-	log.Info(fmt.Sprintf("%s %s", "LoggingIllegalEntity", string(data)))
+		Data:    "",
+	})
 }
 
 func getMountBody(ctx *gin.Context) []byte {
