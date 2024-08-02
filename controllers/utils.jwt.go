@@ -4,11 +4,13 @@ import (
 	"net/http"
 	"strings"
 
-	"go-practice/libs/jwt"
+	"go-practice/libs/tool"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
+
+var j = tool.NewJWT()
+var s = tool.NewSecret()
 
 func forbidden(c *gin.Context) {
 	ctype := c.Request.Header.Get("Content-Type")
@@ -47,22 +49,14 @@ func ApiAuth() gin.HandlerFunc {
 			forbidden(c)
 			return
 		}
-		// log.Print("get token: ", token)
+
+		// decode token
+		token = s.HandleServiceDecrypt(token)
 
 		// jwt
-		j := jwt.NewJWT()
 		claims, err := j.DecryptToken(token)
 
 		if err != nil {
-			if err == jwt.TokenExpired {
-				log.Error("Token is expired")
-
-				forbidden(c)
-				return
-			}
-
-			log.Error(err)
-
 			forbidden(c)
 			return
 		}

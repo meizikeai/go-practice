@@ -2,9 +2,11 @@ package tool
 
 import (
 	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -13,6 +15,29 @@ import (
 
 	mathrand "math/rand"
 )
+
+var env = []string{
+	"release",
+	"test",
+}
+
+func GetMode() string {
+	pass := false
+	mode := os.Getenv("GO_MODE")
+
+	for _, v := range env {
+		if v == mode {
+			pass = true
+			break
+		}
+	}
+
+	if pass == false {
+		mode = "test"
+	}
+
+	return mode
+}
 
 func Contain(arr []string, element string) bool {
 	for _, v := range arr {
@@ -194,4 +219,48 @@ func StringToArray(data string) []string {
 
 func GetTime() string {
 	return time.Now().Format("2006-01-02 15:04:05")
+}
+
+func Base64EncodeToString(str []byte) string {
+	return base64.StdEncoding.EncodeToString(str)
+}
+
+func Base64DecodeString(str string) ([]byte, error) {
+	switch len(str) % 4 {
+	case 2:
+		str += "=="
+	case 3:
+		str += "="
+	}
+
+	data, err := base64.StdEncoding.DecodeString(str)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func HexToDec(value string) int {
+	dec, err := strconv.ParseInt(value, 16, 64)
+
+	if err != nil {
+		return 0
+	}
+
+	return int(dec)
+}
+
+// 生成随机的 iv (初始向量)
+func GenerateInitVector(size int) []byte {
+	iv := make([]byte, size)
+
+	_, err := rand.Read(iv)
+
+	if err != nil {
+		return nil
+	}
+
+	return iv
 }

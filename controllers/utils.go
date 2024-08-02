@@ -17,12 +17,15 @@ var empty = map[string]any{}
 var responseMessage = map[int]string{
 	200: "OK",
 	400: "Bad Request",
+	401: "StatusUnauthorized",
 	403: "Forbidden",
 	404: "Not Found",
 	405: "Method Not Allowed",
 	415: "Unsupported Media Type",
 	422: "Unprocessable Entity",
 	500: "Internal Server Error",
+
+	403001: "select / inset / update / delete data failed!",
 }
 
 func newResponse(code int, data any) *response {
@@ -53,38 +56,26 @@ func getBody(c *gin.Context) []byte {
 }
 
 func getHeader(req *http.Request) map[string]string {
-	result := map[string]string{}
-
-	// ip
 	ip := req.Header.Get("x-real-ip")
 
 	if len(ip) == 0 {
 		ip = req.Header.Get("x-forwarded-for")
 	}
 
-	if len(ip) == 0 {
-		ip = req.RemoteAddr
+	// if len(ip) == 0 {
+	// 	ip = req.RemoteAddr
+	// }
+
+	result := map[string]string{
+		"ip":     ip,
+		"rp":     req.RemoteAddr,
+		"id":     req.Header.Get("x-request-id"),
+		"uid":    req.Header.Get("x-remote-userid"),
+		"ua":     req.UserAgent(),
+		"uri":    req.RequestURI,
+		"method": req.Method,
+		"lang":   req.Header.Get("accept-language"),
 	}
-
-	result["ip"] = ip
-	result["rp"] = req.RemoteAddr
-
-	// id
-	id := req.Header.Get("x-request-id")
-
-	if len(id) <= 0 {
-		id = ""
-	}
-
-	result["id"] = id
-
-	// uid
-	uid := req.Header.Get("x-remote-userid")
-
-	result["uid"] = uid
-
-	// ua
-	result["ua"] = req.UserAgent()
 
 	return result
 }

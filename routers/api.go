@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddTestApiRouter(router *gin.Engine) {
+func AddApiRouter(router *gin.Engine) {
 	router.GET("/home", controllers.Home)
 
 	r := router.Group("/api")

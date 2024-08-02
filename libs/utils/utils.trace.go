@@ -54,7 +54,7 @@ func TraceLogger() gin.HandlerFunc {
 		method := c.Request.Method
 		uri := c.Request.RequestURI
 
-		body := tool.CleanSpace(string(getMountBody(c)))
+		body := tool.CleanLineFeed(string(getMountBody(c)))
 
 		data := writer.body.String()
 
@@ -71,7 +71,7 @@ func TraceLogger() gin.HandlerFunc {
 }
 
 func LoggingIllegalEntity(c *gin.Context) {
-	body := tool.CleanSpace(string(getMountBody(c)))
+	body := tool.CleanLineFeed(string(getMountBody(c)))
 
 	HandleWarnLogging(traceLog{
 		Title:   "LoggingIllegalEntity",

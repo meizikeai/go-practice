@@ -53,14 +53,18 @@ func CheckPassword(password string, min, max int) int {
 	return level
 }
 
-var notANumberRegex = regexp.MustCompile(`\D`)
+var notANumberRegexp = regexp.MustCompile(`\D`)
+var noSpaceRegexp = regexp.MustCompile(`\s+|\n|\r|\t`)
+var noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
 
 func CleanNotANumber(str string) string {
-	return notANumberRegex.ReplaceAllString(str, "")
+	return notANumberRegexp.ReplaceAllString(str, "")
 }
 
-var noSpaceRegex = regexp.MustCompile("\\s|\n|\r")
-
 func CleanSpace(str string) string {
-	return noSpaceRegex.ReplaceAllString(str, "")
+	return noSpaceRegexp.ReplaceAllString(str, "")
+}
+
+func CleanLineFeed(str string) string {
+	return noLineFeedRegexp.ReplaceAllString(str, " ")
 }
