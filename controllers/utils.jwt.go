@@ -4,13 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"go-practice/libs/tool"
-
 	"github.com/gin-gonic/gin"
 )
-
-var j = tool.NewJWT()
-var s = tool.NewSecret()
 
 func forbidden(c *gin.Context) {
 	ctype := c.Request.Header.Get("Content-Type")
@@ -51,10 +46,10 @@ func ApiAuth() gin.HandlerFunc {
 		}
 
 		// decode token
-		token = s.HandleServiceDecrypt(token)
+		token = chaos.HandleServiceDecrypt(token)
 
 		// jwt
-		claims, err := j.DecryptToken(token)
+		claims, err := jwt.DecryptToken(token)
 
 		if err != nil {
 			forbidden(c)

@@ -1,11 +1,14 @@
-package tool
+package secret
 
 import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"strconv"
 )
 
 var secret = map[string]string{
@@ -30,7 +33,7 @@ func (s *Secret) HandleServiceEncrypt(ak, p string) string {
 		return ""
 	}
 
-	result = Base64EncodeToString(ciphertext)
+	result = base64.StdEncoding.EncodeToString(ciphertext)
 	// fmt.Println(result)
 
 	return result
@@ -40,7 +43,7 @@ func (s *Secret) HandleServiceEncrypt(ak, p string) string {
 func (s *Secret) HandleServiceDecrypt(c string) string {
 	result := ""
 
-	cipher, err := Base64DecodeString(c)
+	cipher, err := base64.StdEncoding.DecodeString(c)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -53,20 +56,20 @@ func (s *Secret) HandleServiceDecrypt(c string) string {
 	return result
 }
 
-func (s *Secret) GetSecretKey(k string) []byte {
-	result, _ := Base64DecodeString(secret[k])
+func (s *Secret) getSecretKey(k string) []byte {
+	result, _ := base64.StdEncoding.DecodeString(secret[k])
 	return result
 }
 
 // PKCS7 padding of data
-func pkcs7Padding(plaintext []byte, blockSize int) []byte {
+func (s *Secret) pkcs7Padding(plaintext []byte, blockSize int) []byte {
 	padding := blockSize - len(plaintext)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(plaintext, padText...)
 }
 
 // PKCS7 unpadding of data
-func pkcs7UnPadding(plaintext []byte) []byte {
+func (s *Secret) pkcs7UnPadding(plaintext []byte) []byte {
 	length := len(plaintext)
 	unpadding := int(plaintext[length-1])
 	return plaintext[:(length - unpadding)]
@@ -75,10 +78,10 @@ func pkcs7UnPadding(plaintext []byte) []byte {
 // encrypt data using AES-128-CBC
 func (s *Secret) EncryptAes128CBC(text string, key []byte) ([]byte, error) {
 	// fill in the input data
-	plaintext := pkcs7Padding([]byte(text), aes.BlockSize)
+	plaintext := s.pkcs7Padding([]byte(text), aes.BlockSize)
 
 	// generate initial vector
-	iv := GenerateInitVector(aes.BlockSize)
+	iv := generateInitVector(aes.BlockSize)
 
 	// create aes block cipher
 	block, err := aes.NewCipher(key)
@@ -119,7 +122,7 @@ func (s *Secret) DecryptAes128CBC(ciphertext, key []byte) ([]byte, error) {
 	stream.CryptBlocks(plaintext, ciphertext)
 
 	// PKCS7 unpadding
-	plaintext = pkcs7UnPadding(plaintext)
+	plaintext = s.pkcs7UnPadding(plaintext)
 
 	return plaintext, nil
 }
@@ -127,7 +130,7 @@ func (s *Secret) DecryptAes128CBC(ciphertext, key []byte) ([]byte, error) {
 func (s *Secret) HandleEncrypt(ak, p string) string {
 	result := ""
 
-	key := s.GetSecretKey(ak)
+	key := s.getSecretKey(ak)
 	cipher, err := s.EncryptAes128CBC(p, key)
 
 	if err != nil {
@@ -135,7 +138,7 @@ func (s *Secret) HandleEncrypt(ak, p string) string {
 		return result
 	}
 
-	pos := HexToDec(ak[0:1])
+	pos := hexToDec(ak[0:1])
 
 	iv := hex.EncodeToString(cipher[:16])
 	ciphertext := hex.EncodeToString(cipher[16:])
@@ -152,7 +155,7 @@ func (s *Secret) HandleDecrypt(c string) string {
 	ak := c[0:4]
 	enc := c[4:]
 
-	pos := HexToDec(ak[0:1])
+	pos := hexToDec(ak[0:1])
 
 	iv, _ := hex.DecodeString(enc[pos : pos+32])
 	cipher, _ := hex.DecodeString(fmt.Sprintf("%s%s", enc[0:pos], enc[pos+32:]))
@@ -161,7 +164,7 @@ func (s *Secret) HandleDecrypt(c string) string {
 	ciphertext = append(ciphertext, iv...)
 	ciphertext = append(ciphertext, cipher...)
 
-	key := s.GetSecretKey(ak)
+	key := s.getSecretKey(ak)
 	plaintext, err := s.DecryptAes128CBC(ciphertext, key)
 
 	if err != nil {
@@ -173,4 +176,27 @@ func (s *Secret) HandleDecrypt(c string) string {
 	// fmt.Println(result)
 
 	return result
+}
+
+// 生成随机的 iv (初始向量)
+func generateInitVector(size int) []byte {
+	iv := make([]byte, size)
+
+	_, err := rand.Read(iv)
+
+	if err != nil {
+		return nil
+	}
+
+	return iv
+}
+
+func hexToDec(value string) int {
+	dec, err := strconv.ParseInt(value, 16, 64)
+
+	if err != nil {
+		return 0
+	}
+
+	return int(dec)
 }

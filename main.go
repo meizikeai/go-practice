@@ -13,19 +13,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var tools = tool.NewTools()
+
 func init() {
-	// tool.HandleMySQLClient()
-	// tool.HandleRedisClient()
+	// tools.HandleMySQLClient()
+	// tools.HandleRedisClient()
 
 	log.HandleLogger("go-practice")
 }
 
 func main() {
-	tool.SignalHandler(func() {
-		// tool.CloseMySQL()
-		// tool.CloseRedis()
+	tools.SignalHandler(func() {
+		// tools.CloseMySQL()
+		// tools.CloseRedis()
 
-		tool.Stdout("The Service is Shutdown")
+		tools.Stdout("The Service is Shutdown")
 
 		os.Exit(0)
 	})
@@ -50,7 +52,7 @@ func main() {
 	routers.HandleRouter(router)
 
 	port := config.GetPort()
-	tool.Stdout("The current environment is " + config.GetMode())
-	tool.Stdout("The service is running on 127.0.0.1:" + port)
+	tools.Stdout("The current environment is " + config.GetMode())
+	tools.Stdout("The service is running on 127.0.0.1:" + port)
 	router.Run(":" + port)
 }

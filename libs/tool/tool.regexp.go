@@ -5,6 +5,28 @@ import (
 	// "github.com/dlclark/regexp2"
 )
 
+type Regexp struct{}
+
+func NewRegexp() *Regexp {
+	return &Regexp{}
+}
+
+var notANumberRegexp = regexp.MustCompile(`\D`)
+var noSpaceRegexp = regexp.MustCompile(`\s+|\n|\r|\t`)
+var noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
+
+func (r *Regexp) CleanNotANumber(str string) string {
+	return notANumberRegexp.ReplaceAllString(str, "")
+}
+
+func (r *Regexp) CleanSpace(str string) string {
+	return noSpaceRegexp.ReplaceAllString(str, "")
+}
+
+func (r *Regexp) CleanLineFeed(str string) string {
+	return noLineFeedRegexp.ReplaceAllString(str, " ")
+}
+
 var checkPasswordRegexp = handleCheckPasswordRegexp()
 
 func handleCheckPasswordRegexp() []*regexp.Regexp {
@@ -31,7 +53,7 @@ func handleCheckPasswordRegexp() []*regexp.Regexp {
 	return result
 }
 
-func CheckPassword(password string, min, max int) int {
+func (r *Regexp) CheckPassword(password string, min, max int) int {
 	level := 0
 
 	if len(password) < min {
@@ -51,20 +73,4 @@ func CheckPassword(password string, min, max int) int {
 	}
 
 	return level
-}
-
-var notANumberRegexp = regexp.MustCompile(`\D`)
-var noSpaceRegexp = regexp.MustCompile(`\s+|\n|\r|\t`)
-var noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
-
-func CleanNotANumber(str string) string {
-	return notANumberRegexp.ReplaceAllString(str, "")
-}
-
-func CleanSpace(str string) string {
-	return noSpaceRegexp.ReplaceAllString(str, "")
-}
-
-func CleanLineFeed(str string) string {
-	return noLineFeedRegexp.ReplaceAllString(str, " ")
 }

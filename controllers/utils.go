@@ -4,8 +4,14 @@ import (
 	"io"
 	"net/http"
 
+	"go-practice/libs/secret"
+	"go-practice/libs/token"
+
 	"github.com/gin-gonic/gin"
 )
+
+var jwt = token.NewJsonWebToken()
+var chaos = secret.NewSecret()
 
 type response struct {
 	Code    int    `json:"code"`

@@ -6,6 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var tools = tool.NewTools()
+
 type Person struct {
 	Id       int    `json:"id" form:"id"`
 	Email    string `json:"email" form:"email"`
@@ -20,7 +22,7 @@ type Person struct {
 }
 
 func AddPerson(v []string) (id int64, err error) {
-	pool := tool.GetMySQLClient("default.master")
+	pool := tools.GetMySQLClient("default.master")
 	res, err := pool.Exec(`
 		INSERT INTO test_user_info(id, email, name, national, gender, idcard, phone, address, postcode)
 		VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -36,7 +38,7 @@ func AddPerson(v []string) (id int64, err error) {
 }
 
 func GetPerson() (result []Person, err error) {
-	pool := tool.GetMySQLClient("default.master")
+	pool := tools.GetMySQLClient("default.master")
 	res, err := pool.Query("SELECT id, email, name, national, gender, idcard, phone, address, postcode, datetime FROM test_user_info")
 
 	if err != nil {
@@ -70,7 +72,7 @@ func GetPerson() (result []Person, err error) {
 }
 
 func UpdatePerson(name, phone, email string) (ra int64, err error) {
-	pool := tool.GetMySQLClient("default.master")
+	pool := tools.GetMySQLClient("default.master")
 	row, err := pool.Prepare("UPDATE test_user_info SET name=?, phone=? WHERE id=?")
 
 	defer row.Close()

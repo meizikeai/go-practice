@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"go-practice/libs/tool"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -54,7 +52,7 @@ func TraceLogger() gin.HandlerFunc {
 		method := c.Request.Method
 		uri := c.Request.RequestURI
 
-		body := tool.CleanLineFeed(string(getMountBody(c)))
+		body := rules.CleanLineFeed(string(getMountBody(c)))
 
 		data := writer.body.String()
 
@@ -63,15 +61,15 @@ func TraceLogger() gin.HandlerFunc {
 			Method:  method,
 			Status:  status,
 			Client:  client,
-			Body:    tool.UnmarshalJson(body),
-			Data:    tool.UnmarshalJson(data),
+			Body:    units.UnmarshalJson(body),
+			Data:    units.UnmarshalJson(data),
 			Latency: latency,
 		})
 	}
 }
 
 func LoggingIllegalEntity(c *gin.Context) {
-	body := tool.CleanLineFeed(string(getMountBody(c)))
+	body := rules.CleanLineFeed(string(getMountBody(c)))
 
 	HandleWarnLogging(traceLog{
 		Title:   "LoggingIllegalEntity",
@@ -80,7 +78,7 @@ func LoggingIllegalEntity(c *gin.Context) {
 		Status:  c.Writer.Status(),
 		Client:  c.ClientIP(),
 		Request: getRequestID(c.Request),
-		Body:    tool.UnmarshalJson(body),
+		Body:    units.UnmarshalJson(body),
 		Data:    "",
 	})
 }
