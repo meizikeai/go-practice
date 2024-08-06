@@ -1,10 +1,16 @@
 package log
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
+	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -36,7 +42,13 @@ func (hook *Hook) Levels() []logrus.Level {
 	return logrus.AllLevels[:hook.minLevel+1]
 }
 
-func getLogger(file string) *lumberjack.Logger {
+type CreateLog struct{}
+
+func NewCreateLog() *CreateLog {
+	return &CreateLog{}
+}
+
+func (c *CreateLog) getLogger(file string) *lumberjack.Logger {
 	template := &lumberjack.Logger{
 		Filename:   file,
 		MaxSize:    100,   // Maximum log file split size, default 100 MB
@@ -49,12 +61,12 @@ func getLogger(file string) *lumberjack.Logger {
 	return template
 }
 
-func createHook(errFile, warFile, infFile, debFile, traFile string) *Hook {
-	errlog := getLogger(errFile)
-	warlog := getLogger(warFile)
-	inflog := getLogger(infFile)
-	deblog := getLogger(debFile)
-	tralog := getLogger(traFile)
+func (c *CreateLog) createHook(errFile, warFile, infFile, debFile, traFile string) *Hook {
+	errlog := c.getLogger(errFile)
+	warlog := c.getLogger(warFile)
+	inflog := c.getLogger(infFile)
+	deblog := c.getLogger(debFile)
+	tralog := c.getLogger(traFile)
 
 	hook := Hook{
 		defaultLogger: tralog,
@@ -72,7 +84,7 @@ func createHook(errFile, warFile, infFile, debFile, traFile string) *Hook {
 	return &hook
 }
 
-func HandleLogger(app string) {
+func (c *CreateLog) HandleLogger(app string) {
 	pwd, _ := os.Getwd()
 	mode := os.Getenv("GO_ENV")
 
@@ -90,9 +102,153 @@ func HandleLogger(app string) {
 		traFile = filepath.Join(pwd, "../logs/trace.log")
 	}
 
-	hook := createHook(errFile, warFile, infFile, debFile, traFile)
+	hook := c.createHook(errFile, warFile, infFile, debFile, traFile)
 
 	logrus.SetOutput(io.Discard)
 	logrus.SetLevel(logrus.TraceLevel)
 	logrus.AddHook(hook)
+}
+
+type logger struct {
+	noLineFeed *regexp.Regexp
+}
+
+func NewLogger() *logger {
+	return &logger{
+		noLineFeed: regexp.MustCompile(`\n|\r|\t`),
+	}
+}
+
+func (l *logger) HandleErrorLogging(data any) {
+	logrus.Error(l.marshalJson(data))
+}
+
+func (l *logger) HandleWarnLogging(data any) {
+	logrus.Warn(l.marshalJson(data))
+}
+
+func (l *logger) HandleInfoLogging(data any) {
+	logrus.Info(l.marshalJson(data))
+}
+
+func (l *logger) HandleDebugLogging(data any) {
+	logrus.Debug(l.marshalJson(data))
+}
+
+func (l *logger) HandleTraceLogging(data any) {
+	logrus.Trace(l.marshalJson(data))
+}
+
+func (l *logger) marshalJson(date any) string {
+	res, err := json.Marshal(date)
+
+	if err != nil {
+		return ""
+	}
+
+	return string(res)
+}
+
+func (l *logger) unmarshalJson(date string) map[string]any {
+	res := make(map[string]any, 0)
+
+	_ = json.Unmarshal([]byte(date), &res)
+
+	return res
+}
+
+// trace logger
+type traceWriter struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
+}
+
+func (c traceWriter) Write(b []byte) (int, error) {
+	c.body.Write(b)
+	return c.ResponseWriter.Write(b)
+}
+
+type traceLog struct {
+	Title   string `json:"title"`
+	Uri     string `json:"uri"`
+	Method  string `json:"method"`
+	Status  int    `json:"status"`
+	Client  string `json:"client"`
+	Request string `json:"request"`
+	Body    any    `json:"body,omitempty"`
+	Data    any    `json:"data,omitempty"`
+	Latency any    `json:"latency"`
+}
+
+func (l *logger) TraceLogger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		startTime := time.Now()
+
+		writer := &traceWriter{
+			c.Writer,
+			bytes.NewBuffer([]byte{}),
+		}
+
+		c.Writer = writer
+
+		c.Next()
+
+		endTime := time.Now()
+		latency := endTime.Sub(startTime)
+
+		client := c.ClientIP()
+		status := c.Writer.Status()
+		method := c.Request.Method
+		uri := c.Request.RequestURI
+
+		body := l.cleanLineFeed(string(l.getMountBody(c)))
+
+		data := writer.body.String()
+
+		l.HandleTraceLogging(traceLog{
+			Uri:     uri,
+			Method:  method,
+			Status:  status,
+			Client:  client,
+			Body:    l.unmarshalJson(body),
+			Data:    l.unmarshalJson(data),
+			Latency: latency,
+		})
+	}
+}
+
+func (l *logger) LoggingIllegalEntity(c *gin.Context) {
+	body := l.cleanLineFeed(string(l.getMountBody(c)))
+
+	l.HandleWarnLogging(traceLog{
+		Title:   "LoggingIllegalEntity",
+		Uri:     c.Request.RequestURI,
+		Method:  c.Request.Method,
+		Status:  c.Writer.Status(),
+		Client:  c.ClientIP(),
+		Request: l.getRequestID(c.Request),
+		Body:    l.unmarshalJson(body),
+		Data:    "",
+	})
+}
+
+func (l *logger) getMountBody(ctx *gin.Context) []byte {
+	d, _ := ctx.Get("body")
+	result, _ := d.([]byte)
+
+	return result
+}
+
+func (l *logger) getRequestID(req *http.Request) string {
+	rid := req.Header.Get("http_x_request_id")
+
+	if len(rid) != 0 {
+		return rid
+	}
+
+	return ""
+}
+
+func (l *logger) cleanLineFeed(str string) string {
+	return l.noLineFeed.ReplaceAllString(str, " ")
 }

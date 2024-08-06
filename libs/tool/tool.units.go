@@ -25,18 +25,18 @@ func (u *Units) Contain(arr []string, element string) bool {
 	return false
 }
 
-func (u *Units) MarshalJson(date any) []byte {
+func (u *Units) MarshalJson(date any) string {
 	res, err := json.Marshal(date)
 
 	if err != nil {
-		fmt.Println(err)
+		return ""
 	}
 
-	return res
+	return string(res)
 }
 
 func (u *Units) UnmarshalJson(date string) map[string]any {
-	var res map[string]any
+	res := make(map[string]any, 0)
 
 	_ = json.Unmarshal([]byte(date), &res)
 

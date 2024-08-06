@@ -12,7 +12,7 @@ func NewRegexp() *Regexp {
 }
 
 var notANumberRegexp = regexp.MustCompile(`\D`)
-var noSpaceRegexp = regexp.MustCompile(`\s+|\n|\r|\t`)
+var noSpaceRegexp = regexp.MustCompile(`\s+`)
 var noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
 
 func (r *Regexp) CleanNotANumber(str string) string {

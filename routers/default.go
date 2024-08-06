@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"go-practice/controllers"
 	"go-practice/libs/utils"
 
 	"github.com/gin-gonic/gin"
@@ -9,16 +8,16 @@ import (
 )
 
 func AddDefaultRouter(router *gin.Engine) {
-	router.NoRoute(controllers.NotFound)
-	router.NoMethod(controllers.NotFound)
+	router.NoRoute(logic.NotFound)
+	router.NoMethod(logic.NotFound)
 
-	router.GET("/", controllers.SayHi)
-	router.GET("/favicon.ico", controllers.SayHi)
+	router.GET("/", logic.SayHi)
+	router.GET("/favicon.ico", logic.SayHi)
 
 	// kubernetes
-	router.GET("/healthz", controllers.SayHi)
-	router.GET("/livez", controllers.SayHi)
-	router.GET("/readyz", controllers.SayHi)
+	router.GET("/healthz", logic.SayHi)
+	router.GET("/livez", logic.SayHi)
+	router.GET("/readyz", logic.SayHi)
 
 	// prometheus
 	router.GET("/metrics", utils.PromHandler(promhttp.Handler()))

@@ -1,19 +1,17 @@
 package routers
 
 import (
-	"go-practice/controllers"
-
 	"github.com/gin-gonic/gin"
 )
 
 func AddApiRouter(router *gin.Engine) {
-	router.GET("/home", controllers.Home)
+	router.GET("/home", logic.Home)
 
 	r := router.Group("/api")
 
-	r.Use(controllers.ApiAuth())
+	r.Use(logic.ApiAuth())
 	{
-		r.GET("/test", controllers.ApiTest)
-		r.POST("/test", controllers.ApiTest)
+		r.GET("/test", logic.ApiTest)
+		r.POST("/test", logic.ApiTest)
 	}
 }

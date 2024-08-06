@@ -14,12 +14,15 @@ import (
 )
 
 var tools = tool.NewTools()
+var daily = log.NewCreateLog()
+var logger = log.NewLogger()
+var logic = controllers.NewLogic()
 
 func init() {
 	// tools.HandleMySQLClient()
 	// tools.HandleRedisClient()
 
-	log.HandleLogger("go-practice")
+	daily.HandleLogger("go-practice")
 }
 
 func main() {
@@ -36,13 +39,13 @@ func main() {
 	router := gin.New()
 
 	// logger
-	router.Use(utils.TraceLogger())
+	router.Use(logger.TraceLogger())
 
 	// prometheus
 	router.Use(utils.PromMiddleware(&utils.PromOpts{
 		ExcludeRegexStatus: "404",
 		EndpointLabelMappingFn: func(c *gin.Context) string {
-			return controllers.EndpointLabelMappingFn(c)
+			return logic.EndpointLabelMappingFn(c)
 		},
 	}))
 

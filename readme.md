@@ -97,6 +97,21 @@ $ supervisorctl update
 $ supervisorctl status
 ```
 
+
+```sh
+# 其它定义
+var tools = tool.NewTools()
+var daily = log.NewCreateLog()
+var logger = log.NewLogger()
+var logic = controllers.NewLogic()
+var tasks = crontab.NewTasks()
+var lion = fetch.NewFetch()
+var rules = tool.NewRegexp()
+var share = tool.NewShare()
+var units = tool.NewUnits()
+var fetch = models.NewModelsFetch()
+```
+
 ## 学习资料
 
 **Go 语言设计与实现**
