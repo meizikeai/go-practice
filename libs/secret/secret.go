@@ -11,14 +11,16 @@ import (
 	"strconv"
 )
 
-var secret = map[string]string{
-	"bf5d": "Av7Cc1pfGdKQkJpcJig1Hg==",
+type Secret struct {
+	secret map[string]string
 }
 
-type Secret struct{}
-
 func NewSecret() *Secret {
-	return &Secret{}
+	return &Secret{
+		secret: map[string]string{
+			"bf5d": "Av7Cc1pfGdKQkJpcJig1Hg==",
+		},
+	}
 }
 
 // 加密 - 服务端加密
@@ -57,7 +59,7 @@ func (s *Secret) HandleServiceDecrypt(c string) string {
 }
 
 func (s *Secret) getSecretKey(k string) []byte {
-	result, _ := base64.StdEncoding.DecodeString(secret[k])
+	result, _ := base64.StdEncoding.DecodeString(s.secret[k])
 	return result
 }
 

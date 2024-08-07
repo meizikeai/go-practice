@@ -1,14 +1,19 @@
 package controllers
 
 import (
+	"go-practice/libs/secret"
+	"go-practice/libs/token"
 	"io"
 	"net/http"
 	"regexp"
 
-	"go-practice/libs/secret"
-	"go-practice/libs/token"
-
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	tiger = NewTiger()
+	jwt   = token.NewJsonWebToken()
+	chaos = secret.NewSecret()
 )
 
 type Logic struct {
@@ -87,10 +92,6 @@ func NewTiger() *Tiger {
 		},
 	}
 }
-
-var tiger = NewTiger()
-var jwt = token.NewJsonWebToken()
-var chaos = secret.NewSecret()
 
 type response struct {
 	Code    int    `json:"code"`

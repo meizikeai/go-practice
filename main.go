@@ -13,10 +13,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var tools = tool.NewTools()
-var daily = log.NewCreateLog()
-var logger = log.NewLogger()
-var logic = controllers.NewLogic()
+var (
+	// rules = tool.NewRegexp()
+	// share = tool.NewShare()
+	// tasks = crontab.NewTasks()
+	tools = tool.NewTools()
+	// units = tool.NewUnits()
+	// chaos  = secret.NewSecret()
+	daily = log.NewCreateLog()
+	// fetch  = models.NewModelsFetch()
+	// jwt    = token.NewJsonWebToken()
+	// lion   = fetch.NewFetch()
+	logger = log.NewLogger()
+	logic  = controllers.NewLogic()
+	// kafkaProducer = tool.NewKafkaProducer()
+	// kafkaConsumer = tool.NewKafkaConsumer()
+)
 
 func init() {
 	// tools.HandleMySQLClient()

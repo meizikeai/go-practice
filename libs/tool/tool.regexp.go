@@ -11,9 +11,11 @@ func NewRegexp() *Regexp {
 	return &Regexp{}
 }
 
-var notANumberRegexp = regexp.MustCompile(`\D`)
-var noSpaceRegexp = regexp.MustCompile(`\s+`)
-var noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
+var (
+	notANumberRegexp = regexp.MustCompile(`\D`)
+	noSpaceRegexp    = regexp.MustCompile(`\s+`)
+	noLineFeedRegexp = regexp.MustCompile(`\n|\r|\t`)
+)
 
 func (r *Regexp) CleanNotANumber(str string) string {
 	return notANumberRegexp.ReplaceAllString(str, "")
