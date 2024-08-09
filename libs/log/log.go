@@ -3,6 +3,7 @@ package log
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -168,18 +169,6 @@ func (c traceWriter) Write(b []byte) (int, error) {
 	return c.ResponseWriter.Write(b)
 }
 
-type traceLog struct {
-	Title   string `json:"title"`
-	Uri     string `json:"uri"`
-	Method  string `json:"method"`
-	Status  int    `json:"status"`
-	Client  string `json:"client"`
-	Request string `json:"request"`
-	Body    any    `json:"body,omitempty"`
-	Data    any    `json:"data,omitempty"`
-	Latency any    `json:"latency"`
-}
-
 func (l *logger) TraceLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		startTime := time.Now()
@@ -196,23 +185,20 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 		endTime := time.Now()
 		latency := endTime.Sub(startTime)
 
-		client := c.ClientIP()
-		status := c.Writer.Status()
-		method := c.Request.Method
-		uri := c.Request.RequestURI
-
 		body := l.cleanLineFeed(string(l.getMountBody(c)))
-
 		data := writer.body.String()
 
-		l.HandleTraceLogging(traceLog{
-			Uri:     uri,
-			Method:  method,
-			Status:  status,
-			Client:  client,
-			Body:    l.unmarshalJson(body),
-			Data:    l.unmarshalJson(data),
-			Latency: latency,
+		l.HandleTraceLogging(map[string]any{
+			"title":   "TraceLogger",
+			"uri":     c.Request.RequestURI,
+			"method":  c.Request.Method,
+			"status":  c.Writer.Status(),
+			"client":  c.ClientIP(),
+			"remote":  c.Request.RemoteAddr,
+			"request": l.getRequestID(c.Request),
+			"body":    l.unmarshalJson(body),
+			"data":    l.unmarshalJson(data),
+			"latency": fmt.Sprintf("%v", latency),
 		})
 	}
 }
@@ -220,15 +206,15 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 func (l *logger) LoggingIllegalEntity(c *gin.Context) {
 	body := l.cleanLineFeed(string(l.getMountBody(c)))
 
-	l.HandleWarnLogging(traceLog{
-		Title:   "LoggingIllegalEntity",
-		Uri:     c.Request.RequestURI,
-		Method:  c.Request.Method,
-		Status:  c.Writer.Status(),
-		Client:  c.ClientIP(),
-		Request: l.getRequestID(c.Request),
-		Body:    l.unmarshalJson(body),
-		Data:    "",
+	l.HandleWarnLogging(map[string]any{
+		"title":   "LoggingIllegalEntity",
+		"uri":     c.Request.RequestURI,
+		"method":  c.Request.Method,
+		"status":  c.Writer.Status(),
+		"client":  c.ClientIP(),
+		"remote":  c.Request.RemoteAddr,
+		"request": l.getRequestID(c.Request),
+		"body":    l.unmarshalJson(body),
 	})
 }
 
