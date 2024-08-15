@@ -189,7 +189,6 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 		data := writer.body.String()
 
 		l.HandleTraceLogging(map[string]any{
-			"title":   "TraceLogger",
 			"uri":     c.Request.RequestURI,
 			"method":  c.Request.Method,
 			"status":  c.Writer.Status(),
@@ -198,7 +197,7 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 			"request": l.getRequestID(c.Request),
 			"body":    l.unmarshalJson(body),
 			"data":    l.unmarshalJson(data),
-			"latency": fmt.Sprintf("%v", latency),
+			"latency": l.handleTime(latency.Milliseconds()),
 		})
 	}
 }
@@ -207,7 +206,7 @@ func (l *logger) LoggingIllegalEntity(c *gin.Context) {
 	body := l.cleanLineFeed(string(l.getMountBody(c)))
 
 	l.HandleWarnLogging(map[string]any{
-		"title":   "LoggingIllegalEntity",
+		"error":   "422",
 		"uri":     c.Request.RequestURI,
 		"method":  c.Request.Method,
 		"status":  c.Writer.Status(),
@@ -237,4 +236,16 @@ func (l *logger) getRequestID(req *http.Request) string {
 
 func (l *logger) cleanLineFeed(str string) string {
 	return l.noLineFeed.ReplaceAllString(str, " ")
+}
+
+func (l *logger) handleTime(delta int64) string {
+	result := ""
+
+	if delta < 10000 {
+		result = fmt.Sprintf("%dms", delta)
+	} else {
+		result = fmt.Sprintf("%ds", delta/1000)
+	}
+
+	return result
 }
