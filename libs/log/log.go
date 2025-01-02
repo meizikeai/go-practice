@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -52,9 +51,9 @@ func NewCreateLog() *CreateLog {
 func (c *CreateLog) getLogger(file string) *lumberjack.Logger {
 	template := &lumberjack.Logger{
 		Filename:   file,
-		MaxSize:    100,   // Maximum log file split size, default 100 MB
-		MaxBackups: 10,    // Maximum number of old log files to keep
-		MaxAge:     15,    // Maximum number of days to keep old log files
+		MaxSize:    500,   // Maximum log file split size, default 100 MB
+		MaxBackups: 20,    // Maximum number of old log files to keep
+		MaxAge:     10,    // Maximum number of days to keep old log files
 		Compress:   false, // Whether to use gzip to compress and archive log files
 		LocalTime:  true,  // Whether to use local time, default UTC time
 	}
@@ -86,8 +85,7 @@ func (c *CreateLog) createHook(errFile, warFile, infFile, debFile, traFile strin
 }
 
 func (c *CreateLog) HandleLogger(app string) {
-	pwd, _ := os.Getwd()
-	mode := os.Getenv("GO_ENV")
+	mode := c.getMode()
 
 	errFile := filepath.Join("/data/logs/", app, "/error.log")
 	warFile := filepath.Join("/data/logs/", app, "/warn.log")
@@ -96,6 +94,8 @@ func (c *CreateLog) HandleLogger(app string) {
 	traFile := filepath.Join("/data/logs/", app, "/trace.log")
 
 	if mode == "debug" {
+		pwd, _ := os.Getwd()
+
 		errFile = filepath.Join(pwd, "../logs/error.log")
 		warFile = filepath.Join(pwd, "../logs/warn.log")
 		infFile = filepath.Join(pwd, "../logs/info.log")
@@ -108,6 +108,11 @@ func (c *CreateLog) HandleLogger(app string) {
 	logrus.SetOutput(io.Discard)
 	logrus.SetLevel(logrus.TraceLevel)
 	logrus.AddHook(hook)
+}
+
+func (c *CreateLog) getMode() string {
+	mode := os.Getenv("GO_ENV")
+	return mode
 }
 
 type logger struct {
@@ -189,15 +194,15 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 		data := writer.body.String()
 
 		l.HandleTraceLogging(map[string]any{
-			"uri":     c.Request.RequestURI,
-			"method":  c.Request.Method,
-			"status":  c.Writer.Status(),
-			"client":  c.ClientIP(),
-			"remote":  c.Request.RemoteAddr,
-			"request": l.getRequestID(c.Request),
-			"body":    l.unmarshalJson(body),
-			"data":    l.unmarshalJson(data),
-			"latency": l.handleTime(latency.Milliseconds()),
+			"uri":        c.Request.RequestURI,
+			"method":     c.Request.Method,
+			"status":     c.Writer.Status(),
+			"ip":         c.ClientIP(),
+			"remote_ip":  c.Request.RemoteAddr,
+			"request_id": c.Request.Header.Get("x-request-id"),
+			"body":       l.unmarshalJson(body),
+			"data":       l.unmarshalJson(data),
+			"latency":    l.handleTime(latency.Milliseconds()),
 		})
 	}
 }
@@ -206,14 +211,13 @@ func (l *logger) LoggingIllegalEntity(c *gin.Context) {
 	body := l.cleanLineFeed(string(l.getMountBody(c)))
 
 	l.HandleWarnLogging(map[string]any{
-		"error":   "422",
-		"uri":     c.Request.RequestURI,
-		"method":  c.Request.Method,
-		"status":  c.Writer.Status(),
-		"client":  c.ClientIP(),
-		"remote":  c.Request.RemoteAddr,
-		"request": l.getRequestID(c.Request),
-		"body":    l.unmarshalJson(body),
+		"status":     c.Writer.Status(),
+		"uri":        c.Request.RequestURI,
+		"method":     c.Request.Method,
+		"ip":         c.ClientIP(),
+		"remote_ip":  c.Request.RemoteAddr,
+		"request_id": c.Request.Header.Get("x-request-id"),
+		"body":       l.unmarshalJson(body),
 	})
 }
 
@@ -222,16 +226,6 @@ func (l *logger) getMountBody(ctx *gin.Context) []byte {
 	result, _ := d.([]byte)
 
 	return result
-}
-
-func (l *logger) getRequestID(req *http.Request) string {
-	rid := req.Header.Get("http_x_request_id")
-
-	if len(rid) != 0 {
-		return rid
-	}
-
-	return ""
 }
 
 func (l *logger) cleanLineFeed(str string) string {
