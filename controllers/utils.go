@@ -1,19 +1,19 @@
 package controllers
 
 import (
-	"go-practice/libs/secret"
-	"go-practice/libs/token"
 	"io"
 	"net/http"
 	"regexp"
+
+	"go-practice/libs/tool"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
 	tiger = NewTiger()
-	jwt   = token.NewJsonWebToken()
-	chaos = secret.NewSecret()
+	jwt   = tool.NewJsonWebToken()
+	chaos = tool.NewSecret()
 )
 
 type Logic struct {

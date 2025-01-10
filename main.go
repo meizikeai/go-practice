@@ -5,7 +5,6 @@ import (
 
 	"go-practice/config"
 	"go-practice/controllers"
-	"go-practice/libs/log"
 	"go-practice/libs/tool"
 	"go-practice/libs/utils"
 	"go-practice/routers"
@@ -14,18 +13,18 @@ import (
 )
 
 var (
-	// rules = tool.NewRegexp()
-	// share = tool.NewShare()
-	// tasks = crontab.NewTasks()
+	chaos  = tool.NewSecret()
+	daily  = tool.NewCreateLog()
+	jwt    = tool.NewJsonWebToken()
+	lion   = tool.NewFetch()
+	logger = tool.NewLogger()
+	rules  = tool.NewRegexp()
+	// share  = tool.NewShare()
 	tools = tool.NewTools()
-	// units = tool.NewUnits()
-	// chaos  = secret.NewSecret()
-	daily = log.NewCreateLog()
+	units = tool.NewUnits()
+	logic = controllers.NewLogic()
+	// tasks = crontab.NewTasks()
 	// fetch  = models.NewModelsFetch()
-	// jwt    = token.NewJsonWebToken()
-	// lion   = fetch.NewFetch()
-	logger = log.NewLogger()
-	logic  = controllers.NewLogic()
 	// kafkaProducer = tool.NewKafkaProducer()
 	// kafkaConsumer = tool.NewKafkaConsumer()
 )

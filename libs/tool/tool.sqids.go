@@ -1,4 +1,4 @@
-package sqids
+package tool
 
 import (
 	"github.com/sqids/sqids-go"
