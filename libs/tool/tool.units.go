@@ -76,13 +76,14 @@ const (
 func getLetter(types int) string {
 	str := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
 
-	if types == 1 {
+	switch types {
+	case 1:
 		str = "1234567890"
-	} else if types == 2 {
+	case 2:
 		str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	} else if types == 3 {
+	case 3:
 		str = "abcdefghijklmnopqrstuvwxyz"
-	} else if types == 4 {
+	case 4:
 		str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	}
 

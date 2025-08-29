@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"io"
-	"net/http"
 	"regexp"
 
 	"go-practice/libs/tool"
@@ -126,27 +125,27 @@ func (t *Tiger) getBody(c *gin.Context) []byte {
 	return body
 }
 
-func (t *Tiger) getHeader(req *http.Request) map[string]string {
-	ip := req.Header.Get("x-real-ip")
+// func (t *Tiger) getHeader(req *http.Request) map[string]string {
+// 	ip := req.Header.Get("x-real-ip")
 
-	if len(ip) == 0 {
-		ip = req.Header.Get("x-forwarded-for")
-	}
+// 	if len(ip) == 0 {
+// 		ip = req.Header.Get("x-forwarded-for")
+// 	}
 
-	// if len(ip) == 0 {
-	// 	ip = req.RemoteAddr
-	// }
+// 	// if len(ip) == 0 {
+// 	// 	ip = req.RemoteAddr
+// 	// }
 
-	result := map[string]string{
-		"ip":     ip,
-		"rp":     req.RemoteAddr,
-		"id":     req.Header.Get("x-request-id"),
-		"uid":    req.Header.Get("x-remote-userid"),
-		"ua":     req.UserAgent(),
-		"uri":    req.RequestURI,
-		"method": req.Method,
-		"lang":   req.Header.Get("accept-language"),
-	}
+// 	result := map[string]string{
+// 		"ip":     ip,
+// 		"rp":     req.RemoteAddr,
+// 		"id":     req.Header.Get("x-request-id"),
+// 		"uid":    req.Header.Get("x-remote-userid"),
+// 		"ua":     req.UserAgent(),
+// 		"uri":    req.RequestURI,
+// 		"method": req.Method,
+// 		"lang":   req.Header.Get("accept-language"),
+// 	}
 
-	return result
-}
+// 	return result
+// }
