@@ -1,4 +1,4 @@
-package models
+package repository
 
 var (
 // ctx   = context.Background()

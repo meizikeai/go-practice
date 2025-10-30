@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"go-practice/config"
-	"go-practice/controllers"
+	"go-practice/controller"
 	"go-practice/libs/tool"
 	"go-practice/libs/utils"
-	"go-practice/routers"
+	"go-practice/router"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ var (
 	daily  = tool.NewCreateLog()
 	logger = tool.NewLogger()
 	tools  = tool.NewTools()
-	logic  = controllers.NewLogic()
+	logic  = controller.NewLogic()
 	// chaos         = tool.NewSecret()
 	// jwt           = tool.NewJsonWebToken()
 	// lion          = tool.NewFetch()
@@ -47,13 +47,13 @@ func main() {
 	})
 
 	// gin
-	router := gin.New()
+	app := gin.New()
 
 	// logger
-	router.Use(logger.TraceLogger())
+	app.Use(logger.TraceLogger())
 
 	// prometheus
-	router.Use(utils.PromMiddleware(&utils.PromOpts{
+	app.Use(utils.PromMiddleware(&utils.PromOpts{
 		ExcludeRegexStatus: "404",
 		EndpointLabelMappingFn: func(c *gin.Context) string {
 			return logic.EndpointLabelMappingFn(c)
@@ -61,12 +61,12 @@ func main() {
 	}))
 
 	// recovery
-	router.Use(gin.Recovery())
+	app.Use(gin.Recovery())
 
-	routers.HandleRouter(router)
+	router.HandleRouter(app)
 
 	port := config.GetPort()
 	tools.Stdout("The current environment is " + config.GetMode())
 	tools.Stdout("The service is running on 127.0.0.1:" + port)
-	router.Run(":" + port)
+	app.Run(":" + port)
 }

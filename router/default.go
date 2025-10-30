@@ -1,13 +1,23 @@
-package routers
+package router
 
 import (
+	"go-practice/controller"
 	"go-practice/libs/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func AddDefaultRouter(router *gin.Engine) {
+var logic = controller.NewLogic()
+
+func HandleRouter(r *gin.Engine) *gin.Engine {
+	addDefaultRouter(r)
+	addApiRouter(r)
+
+	return r
+}
+
+func addDefaultRouter(router *gin.Engine) {
 	router.NoRoute(logic.NotFound)
 	router.NoMethod(logic.NotFound)
 
