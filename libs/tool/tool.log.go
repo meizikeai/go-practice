@@ -51,9 +51,9 @@ func NewCreateLog() *CreateLog {
 func (c *CreateLog) getLogger(file string) *lumberjack.Logger {
 	template := &lumberjack.Logger{
 		Filename:   file,
-		MaxSize:    500,   // Maximum log file split size, default 100 MB
+		MaxSize:    500,   // Maximum log file split size, default 500 MB
 		MaxBackups: 20,    // Maximum number of old log files to keep
-		MaxAge:     10,    // Maximum number of days to keep old log files
+		MaxAge:     60,    // Maximum number of days to keep old log files
 		Compress:   false, // Whether to use gzip to compress and archive log files
 		LocalTime:  true,  // Whether to use local time, default UTC time
 	}
@@ -85,15 +85,13 @@ func (c *CreateLog) createHook(errFile, warFile, infFile, debFile, traFile strin
 }
 
 func (c *CreateLog) HandleLogger(app string) {
-	mode := c.getMode()
-
 	errFile := filepath.Join("/data/logs/", app, "/error.log")
 	warFile := filepath.Join("/data/logs/", app, "/warn.log")
 	infFile := filepath.Join("/data/logs/", app, "/info.log")
 	debFile := filepath.Join("/data/logs/", app, "/debug.log")
 	traFile := filepath.Join("/data/logs/", app, "/trace.log")
 
-	if mode == "debug" {
+	if os.Getenv("GO_ENV") == "debug" {
 		pwd, _ := os.Getwd()
 
 		errFile = filepath.Join(pwd, "../logs/error.log")
@@ -110,11 +108,6 @@ func (c *CreateLog) HandleLogger(app string) {
 	logrus.AddHook(hook)
 }
 
-func (c *CreateLog) getMode() string {
-	mode := os.Getenv("GO_ENV")
-	return mode
-}
-
 type logger struct {
 	noLineFeed *regexp.Regexp
 }
@@ -125,23 +118,23 @@ func NewLogger() *logger {
 	}
 }
 
-func (l *logger) HandleErrorLogging(data any) {
+func (l *logger) Error(data any) {
 	logrus.Error(l.marshalJson(data))
 }
 
-func (l *logger) HandleWarnLogging(data any) {
+func (l *logger) Warn(data any) {
 	logrus.Warn(l.marshalJson(data))
 }
 
-func (l *logger) HandleInfoLogging(data any) {
+func (l *logger) Info(data any) {
 	logrus.Info(l.marshalJson(data))
 }
 
-func (l *logger) HandleDebugLogging(data any) {
+func (l *logger) Debug(data any) {
 	logrus.Debug(l.marshalJson(data))
 }
 
-func (l *logger) HandleTraceLogging(data any) {
+func (l *logger) Trace(data any) {
 	logrus.Trace(l.marshalJson(data))
 }
 
@@ -193,7 +186,7 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 		body := l.cleanLineFeed(string(l.getMountBody(c)))
 		data := writer.body.String()
 
-		l.HandleTraceLogging(map[string]any{
+		l.Trace(map[string]any{
 			"uri":        c.Request.RequestURI,
 			"method":     c.Request.Method,
 			"status":     c.Writer.Status(),
@@ -210,7 +203,7 @@ func (l *logger) TraceLogger() gin.HandlerFunc {
 func (l *logger) LoggingIllegalEntity(c *gin.Context) {
 	body := l.cleanLineFeed(string(l.getMountBody(c)))
 
-	l.HandleWarnLogging(map[string]any{
+	l.Warn(map[string]any{
 		"status":     c.Writer.Status(),
 		"uri":        c.Request.RequestURI,
 		"method":     c.Request.Method,
