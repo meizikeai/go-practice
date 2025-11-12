@@ -51,7 +51,7 @@ func (t *Tools) HandleMySQLClient() {
 
 	dbMySQLCache = result.Client
 
-	t.Stdout("MySQL is Connected")
+	t.Stdout("MySQL connected")
 }
 
 func (t *Tools) CloseMySQL() {
@@ -61,7 +61,7 @@ func (t *Tools) CloseMySQL() {
 		}
 	}
 
-	t.Stdout("MySQL is Close")
+	t.Stdout("MySQL connection closed")
 }
 
 // redis
@@ -78,7 +78,7 @@ func (t *Tools) HandleRedisClient() {
 
 	dbRedisCache = result.Client
 
-	t.Stdout("Redis is Connected")
+	t.Stdout("Redis connected")
 }
 
 func (t *Tools) CloseRedis() {
@@ -88,5 +88,5 @@ func (t *Tools) CloseRedis() {
 		}
 	}
 
-	t.Stdout("Redis is Close")
+	t.Stdout("Redis connection closed")
 }

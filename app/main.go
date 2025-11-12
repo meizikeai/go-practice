@@ -32,7 +32,6 @@ var (
 func init() {
 	// tools.HandleMySQLClient()
 	// tools.HandleRedisClient()
-
 	daily.HandleLogger("go-practice")
 }
 
@@ -40,16 +39,14 @@ func main() {
 	tools.SignalHandler(func() {
 		// tools.CloseMySQL()
 		// tools.CloseRedis()
-
-		tools.Stdout("The Service is Shutdown")
-
+		tools.Stdout("Service shut down")
 		os.Exit(0)
 	})
 
 	// gin
 	app := gin.New()
 
-	// logger
+	// log
 	app.Use(logger.TraceLogger())
 
 	// prometheus
@@ -66,7 +63,7 @@ func main() {
 	router.HandleRouter(app)
 
 	port := config.GetPort()
-	tools.Stdout("The current environment is " + config.GetMode())
-	tools.Stdout("The service is running on 127.0.0.1:" + port)
+	tools.Stdout("Starting application in the " + config.GetMode() + " environment")
+	tools.Stdout("Application started successfully. Listening on 127.0.0.1:" + port)
 	app.Run(":" + port)
 }
