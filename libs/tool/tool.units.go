@@ -3,11 +3,9 @@ package tool
 import (
 	"crypto/rand"
 	"encoding/json"
-	"fmt"
 	"math/big"
 	"reflect"
 	"regexp"
-	"strings"
 	"time"
 	"unsafe"
 
@@ -133,20 +131,6 @@ func (u *Units) GenerateRandomNumber(start, end, count int) ([]int, error) {
 	return result, nil
 }
 
-func (u *Units) RemoveDuplicateElement(strs []string) []string {
-	result := make([]string, 0, len(strs))
-	temp := map[string]struct{}{}
-
-	for _, item := range strs {
-		if _, ok := temp[item]; !ok {
-			temp[item] = struct{}{}
-			result = append(result, item)
-		}
-	}
-
-	return result
-}
-
 func (u *Units) IsSlice(v any) bool {
 	kind := reflect.ValueOf(v).Kind()
 
@@ -155,8 +139,4 @@ func (u *Units) IsSlice(v any) bool {
 	}
 
 	return false
-}
-
-func (u *Units) ArrayIntToString(array []int64, delim string) string {
-	return strings.Trim(strings.Replace(fmt.Sprint(array), " ", delim, -1), "[]")
 }

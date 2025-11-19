@@ -13,10 +13,11 @@ import (
 )
 
 var (
-	daily  = tool.NewCreateLog()
-	logger = tool.NewLogger()
-	tools  = tool.NewTools()
-	logic  = controller.NewLogic()
+	cfg   = tool.LogConfig()
+	daily = tool.LogFactory(cfg)
+	log   = tool.NewAppLogger(cfg)
+	tools = tool.NewTools()
+	logic = controller.NewLogic()
 	// chaos         = tool.NewSecret()
 	// jwt           = tool.NewJsonWebToken()
 	// lion          = tool.NewFetch()
@@ -32,7 +33,7 @@ var (
 func init() {
 	// tools.HandleMySQLClient()
 	// tools.HandleRedisClient()
-	daily.HandleLogger("go-practice")
+	daily.HandleLog("go-practice")
 }
 
 func main() {
@@ -47,7 +48,7 @@ func main() {
 	app := gin.New()
 
 	// log
-	app.Use(logger.TraceLogger())
+	app.Use(log.TraceMiddleware())
 
 	// prometheus
 	app.Use(utils.PromMiddleware(&utils.PromOpts{

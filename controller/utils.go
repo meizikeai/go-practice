@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"io"
 	"regexp"
+	"strings"
 
 	"go-practice/libs/tool"
 
@@ -14,6 +16,32 @@ var (
 	jwt   = tool.NewJsonWebToken()
 	chaos = tool.NewSecret()
 )
+
+func RemoveDuplicates[T comparable](data []T) []T {
+	uniqueMap := make(map[T]bool)
+	result := []T{}
+
+	for _, v := range data {
+		if !uniqueMap[v] {
+			uniqueMap[v] = true
+			result = append(result, v)
+		}
+	}
+
+	return result
+}
+
+func ArrayToString[T any](array []T, delim string) string {
+	var sb strings.Builder
+	for i, elem := range array {
+		sb.WriteString(fmt.Sprintf("%v", elem))
+
+		if i < len(array)-1 {
+			sb.WriteString(delim)
+		}
+	}
+	return sb.String()
+}
 
 type Logic struct {
 	pointLabel map[string]*regexp.Regexp
