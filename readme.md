@@ -1,113 +1,56 @@
 # go-practice
 
-## 项目构架
+A practice project built with Go (Golang), following clean architecture principles and common enterprise-level project structure.
 
-基于[gin](https://github.com/gin-gonic/gin)构建，支持[mysql](https://github.com/go-sql-driver/mysql)、[redis](https://github.com/go-redis/redis)查询，依赖[golang](https://golang.google.cn/dl)环境。
+## Tech Stack
 
-## 项目地址
+- Web framework: [Gin](https://github.com/gin-gonic/gin)
+- Database: Supports [MySQL](https://github.com/go-sql-driver/mysql) 
+- Cache: Supports [Redis](https://github.com/go-redis/redis) 
+- Runtime: Requires [Go](https://go.dev/dl/) environment
 
-https://github.com/meizikeai/go-practice.git
+## Project Structure
 
-## 项目结构
-
-| 路径        | 描述          | 详情 |
-| ----------- | ------------- | ---- |
-| config      | config        | --   |
-| controllers | controller    | --   |
-| libs        | lib           | --   |
-| models      | mysql / redis | --   |
-| protos      | protobuf      | --   |
-| routers     | router        | --   |
-| go.mod      | go modules    | --   |
-
-## 开发环境
-
-  + 克隆项目 - `$ git clone https://github.com/meizikeai/go-practice.git`
-  + 安装依赖 - `$ cd go-practice && go mod tidy`
-  + 启动项目 - `$ go run .`
-
-推荐[Visual Studio Code](https://code.visualstudio.com)编辑器，开发依赖[Tools](https://github.com/golang/vscode-go/blob/master/docs/tools.md)，请正确安装好后再开始。
-
-## 项目变量
-
-在测试、线上环境需要设置 `GO_MODE` 的值来区分相应环境。
-
-需要在 `～/.zshrc` 里给定 `export GO_MODE=release/test` 后，程序中通过 `mode := os.Getenv("GO_MODE")` 获取。
-
-如果 `GO_MODE` 未设定，那么运行的是 `test` 环境。
-
-为确保正确写日志，本地开发添加 `export GO_ENV=debug` 环境变量。
-
-## 访问地址
-
-  + http://127.0.0.1:8000
-  + http://127.0.0.1:8000/api/test
-
-## 自动部署
-
-如果使用 GitLab 作仓库，可以使用 https://github.com/meizikeai/gitlab-golang-shell.git 跑CI/CD，项目默认有 .gitlab-ci.yml 文件，请君参考！
-
-## 帮助文档
-
- `通过以下命令行执行`
-
-```sh
-# 第一步
-$ cd ~/go-practice
-$ GOOS=linux GOARCH=amd64 go build -o go-practice main.go
-
-# 后台运行，关掉终端会停止运行
-$ ~/go-practice/go-practice &
-
-# 后台运行，关掉终端也会继续运行
-$ nohup ~/go-practice/go-practice > go-practice.log 2>&1 &
-
-# 第二步
-$ 执行方法见 帮助文档
-$ 项目配置件 /etc/supervisor/conf.d
-$ 执行项目名 go-practice
+```bash
+go-practice
+|-- app
+|   |-- main.go         → Application entry point
+|-- config              → Configuration files and settings
+|-- controller          → HTTP handlers (controllers)
+|-- libs                → Utility packages (common reusable functions)
+|-- repository          → Domain models and entity definitions
+|-- router              → Routing definitions
+|-- go.mod              → Go module and dependency management
+|-- README.md           → Project documentation
 ```
 
-```sh
-# program 为 [program:go-practice] 里配置的值
-# start、restart、stop、remove、add 都不会载入最新的配置文件
+## Quick Start
 
-# start      启动程序
-# status     查看程序状态
-# stop       关闭程序
-# tail       查看进程日志
-# update     重启配置文件修改过的程序
-# reload     停止程序，重新加载所有程序
-# reread     读取有更新（增加）的配置文件，不会启动新添加的程序
-# restart    重启程序
+```bash
+# Clone the repository
+git clone https://github.com/meizikeai/go-practice.git
+cd go-practice
 
-# 执行某个进程
-$ supervisorctl restart program
+# Download dependencies
+go mod tidy
 
-# 一次性执行全部进程
-$ supervisorctl restart all
-
-# 载入最新的配置文件，停止原有进程并按新的配置启动所有进程
-$ supervisorctl reload
-
-# 根据最新的配置文件，启动新配置或有改动的进程，配置没有改动的进程不重启
-$ supervisorctl update
-
-# 查看运行状态
-$ supervisorctl status
+# Run the application
+go run .
 ```
 
-## 学习资料
+## Recommended Development Environment
 
-**Go 语言设计与实现**
+- Editor: [Visual Studio Code](https://code.visualstudio.com)
+- Go extension and tools: Refer to the official [Go tools for VS Code](https://github.com/golang/vscode-go/blob/master/docs/tools.md)
 
-+ https://draveness.me/golang
+Please make sure all Go tools are properly installed before starting development.
 
-**幼麟实验室 Golang 合辑**
+## Helpful Resources
 
-+ https://space.bilibili.com/567195437
+- [The Go Programming Language](https://go.dev)
+- [Go Standard Library](https://pkg.go.dev/std) 
+- [Effective Go](https://go.dev/doc/effective_go)
+- [Go by Example](https://gobyexample.com)
+- [Go Web Examples](https://gowebexamples.com)
 
-**Golang Example**
-
-+ https://gobyexample.com
-+ https://gowebexamples.com
+Feel free to explore, modify, and use this project as a reference for building production-ready Go applications!
