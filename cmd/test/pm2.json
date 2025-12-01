@@ -1,0 +1,11 @@
+{
+  "name": "go-practice",
+  "script": "main",
+  "error_file": "/data/logs/pm2/go-practice/error.log",
+  "out_file": "/data/logs/pm2/go-practice/out.log",
+  "instances": 1,
+  "exec_interpreter": "none",
+  "exec_mode": "fork",
+  "merge_logs": true,
+  "env": {}
+}
