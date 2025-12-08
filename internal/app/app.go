@@ -16,6 +16,7 @@ import (
 	"go-practice/internal/pkg/database/cache"
 	"go-practice/internal/pkg/database/kafka"
 	"go-practice/internal/pkg/database/mysql"
+	"go-practice/internal/pkg/fetch"
 	"go-practice/internal/pkg/jwt"
 	"go-practice/internal/pkg/log"
 	"go-practice/internal/pkg/prometheus"
@@ -25,12 +26,12 @@ import (
 )
 
 type App struct {
+	CFG        *config.Config
+	server     *http.Server
 	Crypto     *crypto.Manager
 	Engine     *gin.Engine
 	Jwt        *jwt.Manager
 	Log        *zap.Logger
-	cfg        *config.Config
-	server     *http.Server
 	Cache      Storage
 	DB         Storage
 	Kafka      Storage
@@ -46,7 +47,8 @@ func NewApp(mock ...Mock) *App {
 	cfg := config.Load()
 
 	cache := cache.NewClient(&cfg.Redis)
-	data := mysql.NewClient(&cfg.MySQL)
+	db := mysql.NewClient(&cfg.MySQL)
+	fetch := fetch.NewFetch()
 	kafka := kafka.NewClient(&cfg.Kafka)
 	crypto, _ := crypto.NewManager(&cfg.CryptoKey)
 	jwt, _ := jwt.NewManager(&cfg.JwtKey)
@@ -54,14 +56,14 @@ func NewApp(mock ...Mock) *App {
 
 	app := new(App)
 
-	app.cfg = cfg
+	app.CFG = cfg
 	app.Crypto = crypto
 	app.Jwt = jwt
 	app.Log = record
-	app.cacheClient(data, cache, kafka)
+	app.cacheClient(db, cache, kafka)
 
-	app.Repository = repository.NewRepository(record, data, cache)
-	app.Service = service.NewService(record, app.Repository)
+	app.Repository = repository.NewRepository(cfg.Host, cache, db, fetch, record)
+	app.Service = service.NewService(cfg.App, record, app.Repository)
 
 	// used for testing(mock)
 	for _, fn := range mock {
@@ -97,12 +99,12 @@ func (a *App) cacheClient(db, cache, kafka Storage) {
 
 func (a *App) Run() {
 	a.server = &http.Server{
-		Addr:    net.JoinHostPort("", a.cfg.App.Port),
+		Addr:    net.JoinHostPort("", a.CFG.App.Port),
 		Handler: a.Engine,
 	}
 
 	go func() {
-		a.Stdout("Application initialization started in " + a.cfg.App.Mode + " environment")
+		a.Stdout("Application initialization started in " + a.CFG.App.Mode + " environment")
 		a.Stdout("Application started successfully and listening on 127.0.0.1" + a.server.Addr)
 
 		if err := a.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -153,7 +155,7 @@ func (a *App) Shutdown(ctx context.Context) error {
 }
 
 func (a *App) Stdout(format string, v ...any) {
-	log := fmt.Sprintf("%s %s %s \n", time.Now().Format(time.DateTime), fmt.Sprintf("[%s]", a.cfg.App.Name), format)
+	log := fmt.Sprintf("%s %s %s \n", time.Now().Format(time.DateTime), fmt.Sprintf("[%s]", a.CFG.App.Name), format)
 
 	if _, err := fmt.Fprintf(os.Stdout, log, v...); err != nil {
 		fmt.Println(log)

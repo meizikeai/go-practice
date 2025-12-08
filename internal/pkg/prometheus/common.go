@@ -1,4 +1,4 @@
-// internal/pkg/prometheus/prometheus.go
+// internal/pkg/prometheus/common.go
 package prometheus
 
 import (

@@ -19,6 +19,9 @@ jwt:
     MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDOuy8tHIMW+Ljg...
     -----END PRIVATE KEY-----
 
+host:
+  test: "127.0.0.1:3000"
+
 tencent_cloud:
   secret_id: ""
   secret_key: ""
@@ -37,7 +40,7 @@ mysql:
       - "database:password@tcp(127.0.0.1:3306)/tablename"
     max_idle_conns: 100
     max_open_conns: 200
-    conn_max_lifetime: 10
+    conn_max_lifetime: 300
 
 redis:
   default:

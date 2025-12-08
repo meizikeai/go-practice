@@ -1,8 +1,9 @@
-// internal/pkg/ginctx/ginctx.go
+// internal/pkg/ginctx/common.go
 package ginctx
 
 import (
 	"context"
+	"io"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -57,6 +58,17 @@ func (g *Context) GetToken() string {
 		}
 	}
 	return g.c.Query("token")
+}
+
+func (g *Context) GetBody() ([]byte, error) {
+	body, err := io.ReadAll(g.c.Request.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// g.c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+
+	return body, nil
 }
 
 func FromContext(ctx context.Context) (*Context, bool) {

@@ -1,4 +1,4 @@
-// internal/pkg/tencent/tencent.go
+// internal/pkg/tencent/common.go
 package tencent
 
 import (

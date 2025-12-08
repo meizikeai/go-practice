@@ -1,4 +1,4 @@
-// internal/pkg/response/response.go
+// internal/pkg/response/common.go
 package response
 
 import (

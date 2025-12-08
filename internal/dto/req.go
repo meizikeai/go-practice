@@ -1,4 +1,3 @@
-// internal/dto/common.go
 package dto
 
 // c.ShouldBindUri()			uri:"age"

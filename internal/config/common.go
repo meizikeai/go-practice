@@ -1,4 +1,4 @@
-// internal/config/config.go
+// internal/config/common.go
 package config
 
 import (
@@ -10,11 +10,12 @@ import (
 
 type Config struct {
 	App          App                        `mapstructure:"app"`
+	CryptoKey    CryptoKeyInstance          `mapstructure:"crypto"`
+	Host         map[string]string          `mapstructure:"host"`
+	JwtKey       JwtKeyInstance             `mapstructure:"jwt"`
+	Kafka        map[string]KafkaInstance   `mapstructure:"kafka"`
 	MySQL        map[string][]MySQLInstance `mapstructure:"mysql"`
 	Redis        map[string][]RedisInstance `mapstructure:"redis"`
-	Kafka        map[string]KafkaInstance   `mapstructure:"kafka"`
-	CryptoKey    CryptoKeyInstance          `mapstructure:"crypto"`
-	JwtKey       JwtKeyInstance             `mapstructure:"jwt"`
 	TencentCloud TencentCloudInstance       `mapstructure:"tencent_cloud"`
 }
 
@@ -74,9 +75,12 @@ type TencentCloudInstance struct {
 
 func Load() *Config {
 	var result *Config
+	var env = os.Getenv("GO_ENV")
+	var path = "."
 
-	path := "."
-	if os.Getenv("GO_ENV") == "debug" {
+	if env == "release" {
+		path = path + "/release"
+	} else {
 		path = path + "/test"
 	}
 

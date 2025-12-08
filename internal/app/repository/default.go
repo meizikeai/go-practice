@@ -7,18 +7,33 @@ import (
 	"go-practice/internal/model"
 	"go-practice/internal/pkg/database/cache"
 	"go-practice/internal/pkg/database/mysql"
+	"go-practice/internal/pkg/fetch"
 
 	"go.uber.org/zap"
 )
 
 type repository struct {
-	log   *zap.Logger
-	db    *mysql.Clients
+	host  map[string]string
 	cache *cache.Clients
+	db    *mysql.Clients
+	fetch *fetch.Fetch
+	log   *zap.Logger
 }
 
-func NewRepository(log *zap.Logger, db *mysql.Clients, cache *cache.Clients) Repository {
-	return &repository{log, db, cache}
+func NewRepository(
+	host map[string]string,
+	cache *cache.Clients,
+	db *mysql.Clients,
+	fetch *fetch.Fetch,
+	log *zap.Logger,
+) Repository {
+	return &repository{
+		host,
+		cache,
+		db,
+		fetch,
+		log,
+	}
 }
 
 type Repository interface {
