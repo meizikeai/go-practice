@@ -62,8 +62,8 @@ func NewApp(mock ...Mock) *App {
 	app.Log = record
 	app.cacheClient(db, cache, kafka)
 
-	app.Repository = repository.NewRepository(cfg.Host, cache, db, fetch, record)
-	app.Service = service.NewService(cfg.App, record, app.Repository)
+	app.Repository = repository.NewRepository(cache, db, fetch, record, cfg.Host)
+	app.Service = service.NewService(cfg.App.Mode, app.Repository)
 
 	// used for testing(mock)
 	for _, fn := range mock {
@@ -75,7 +75,7 @@ func NewApp(mock ...Mock) *App {
 	app.Engine = gin.New()
 	app.Engine.Use(
 		log.AccessLog(),
-		log.RecoveryWithZap(record),
+		gin.Recovery(),
 		prometheus.PromMiddleware(&prometheus.PromOpts{
 			ExcludeRegexStatus: "404",
 			EndpointLabelMappingFn: func(c *gin.Context) string {

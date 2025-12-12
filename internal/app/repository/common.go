@@ -1,4 +1,4 @@
-// internal/app/repository/default.go
+// internal/app/repository/common.go
 package repository
 
 import (
@@ -13,26 +13,26 @@ import (
 )
 
 type repository struct {
-	host  map[string]string
 	cache *cache.Clients
 	db    *mysql.Clients
 	fetch *fetch.Fetch
 	log   *zap.Logger
+	host  map[string]string
 }
 
 func NewRepository(
-	host map[string]string,
 	cache *cache.Clients,
 	db *mysql.Clients,
 	fetch *fetch.Fetch,
 	log *zap.Logger,
+	host map[string]string,
 ) Repository {
 	return &repository{
-		host,
 		cache,
 		db,
 		fetch,
 		log,
+		host,
 	}
 }
 

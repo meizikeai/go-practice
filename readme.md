@@ -17,7 +17,7 @@ go-practice
 |   |-- main.go             → Application entry point
 |-- internal
 |   |-- app                 → Dependency injection module
-|   |   |-- controller      → HTTP handlers (controllers)
+|   |   |-- handler         → HTTP handlers
 |   |   |-- repository      → Data access layer
 |   |   |-- router          → Routing definitions
 |   |   |-- service         → Business logic layer
@@ -47,7 +47,7 @@ cd cmd && go run .
 ## Recommended Development Environment
 
 - Editor: [Visual Studio Code](https://code.visualstudio.com)
-- Go extension and tools: Refer to the official [Go tools for VS Code](https://code.visualstudio.com/docs/languages/go)
+- Go extension and tools: Refer to the official [Go in Visual Studio Code](https://code.visualstudio.com/docs/languages/go)
 
 Please make sure all Go tools are properly installed before starting development.
 

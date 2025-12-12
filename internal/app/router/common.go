@@ -1,16 +1,16 @@
-// internal/app/router/router.go
+// internal/app/router/common.go
 package router
 
 import (
 	"go-practice/internal/app"
-	"go-practice/internal/app/controller"
+	"go-practice/internal/app/handler"
 	"go-practice/internal/pkg/prometheus"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func Setup(app *app.App) {
-	logic := controller.NewController(app)
+	logic := handler.NewHandler(app)
 
 	app.Engine.GET("/", logic.SayHi)
 	app.Engine.NoRoute(logic.NoRoute)

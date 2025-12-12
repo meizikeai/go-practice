@@ -7,5 +7,8 @@
   "exec_interpreter": "none",
   "exec_mode": "fork",
   "merge_logs": true,
-  "env": {}
+  "max_memory_restart": "1G",
+  "env": {
+    "GO_ENV": "test"
+  }
 }

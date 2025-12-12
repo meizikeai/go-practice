@@ -1,9 +1,8 @@
 module go-practice
 
-go 1.25.4
+go 1.25.5
 
 require (
-	github.com/gin-contrib/zap v1.1.5
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.9.3

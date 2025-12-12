@@ -9,9 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"go-practice/internal/pkg/ginctx"
-
-	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -41,7 +38,6 @@ func init() {
 
 func AccessLog() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx := ginctx.New(c)
 		start := time.Now()
 
 		reqBody := []byte{}
@@ -68,13 +64,13 @@ func AccessLog() gin.HandlerFunc {
 			zap.Int("status", c.Writer.Status()),
 			zap.Int64("req_size", c.Request.ContentLength),
 			zap.Int("resp_size", lrw.body.Len()),
-			zap.String("client_ip", ctx.GetClientIP()),
+			zap.String("client_ip", c.ClientIP()),
 			zap.String("method", c.Request.Method),
 			zap.String("path", c.Request.URL.Path),
-			zap.String("req_id", ctx.GetReqID()),
+			zap.String("req_id", c.GetHeader("X-Request-Id")),
 			zap.String("remote_ip", c.RemoteIP()),
 			zap.String("route", getRoute(c)),
-			zap.String("user_agent", ctx.GetUserAgent()),
+			zap.String("user_agent", c.GetHeader("User-Agent")),
 		)
 
 		if len(reqBody) > 0 {
@@ -171,9 +167,4 @@ func getRoute(c *gin.Context) string {
 		return route
 	}
 	return c.Request.URL.Path
-}
-
-// Recovery
-func RecoveryWithZap(log *zap.Logger) gin.HandlerFunc {
-	return ginzap.RecoveryWithZap(log, true)
 }
