@@ -12,7 +12,7 @@ type service struct {
 	repo repository.Repository
 }
 
-func NewService(env string, repo repository.Repository) Service {
+func New(env string, repo repository.Repository) Service {
 	return &service{env, repo}
 }
 

@@ -20,7 +20,7 @@ type repository struct {
 	host  map[string]string
 }
 
-func NewRepository(
+func New(
 	cache *cache.Clients,
 	db *mysql.Clients,
 	fetch *fetch.Fetch,

@@ -32,9 +32,9 @@ type App struct {
 	Engine     *gin.Engine
 	Jwt        *jwt.Manager
 	Log        *zap.Logger
-	Cache      Storage
-	DB         Storage
-	Kafka      Storage
+	cache      Storage
+	db         Storage
+	kafka      Storage
 	Repository repository.Repository
 	Service    service.Service
 }
@@ -48,11 +48,11 @@ func NewApp(mock ...Mock) *App {
 
 	cache := cache.NewClient(&cfg.Redis)
 	db := mysql.NewClient(&cfg.MySQL)
-	fetch := fetch.NewFetch()
+	fetch := fetch.NewClient()
 	kafka := kafka.NewClient(&cfg.Kafka)
+	record := log.Load(cfg.App.Name, cfg.App.Mode)
 	crypto, _ := crypto.NewManager(&cfg.CryptoKey)
 	jwt, _ := jwt.NewManager(&cfg.JwtKey)
-	record := log.Load(cfg.App.Name, cfg.App.Mode)
 
 	app := new(App)
 
@@ -62,8 +62,17 @@ func NewApp(mock ...Mock) *App {
 	app.Log = record
 	app.cacheClient(db, cache, kafka)
 
-	app.Repository = repository.NewRepository(cache, db, fetch, record, cfg.Host)
-	app.Service = service.NewService(cfg.App.Mode, app.Repository)
+	app.Repository = repository.New(
+		cache,
+		db,
+		fetch,
+		record,
+		cfg.Host,
+	)
+	app.Service = service.New(
+		cfg.App.Mode,
+		app.Repository,
+	)
 
 	// used for testing(mock)
 	for _, fn := range mock {
@@ -92,9 +101,9 @@ func NewApp(mock ...Mock) *App {
 }
 
 func (a *App) cacheClient(db, cache, kafka Storage) {
-	a.DB = db
-	a.Cache = cache
-	a.Kafka = kafka
+	a.db = db
+	a.cache = cache
+	a.kafka = kafka
 }
 
 func (a *App) Run() {
@@ -124,23 +133,23 @@ func (a *App) Shutdown(ctx context.Context) error {
 
 	var errs []error
 
-	if a.Cache != nil {
+	if a.cache != nil {
 		a.Stdout("Redis connection closed")
-		if err := a.closeStorage(a.Cache, "Redis"); err != nil {
+		if err := a.closeStorage(a.cache, "Redis"); err != nil {
 			errs = append(errs, err)
 		}
 	}
 
-	if a.DB != nil {
+	if a.db != nil {
 		a.Stdout("MySQL connection closed")
-		if err := a.closeStorage(a.DB, "MySQL"); err != nil {
+		if err := a.closeStorage(a.db, "MySQL"); err != nil {
 			errs = append(errs, err)
 		}
 	}
 
-	if a.Kafka != nil {
+	if a.kafka != nil {
 		a.Stdout("Kafka connection closed")
-		if err := a.closeStorage(a.Kafka, "Kafka"); err != nil {
+		if err := a.closeStorage(a.kafka, "Kafka"); err != nil {
 			errs = append(errs, err)
 		}
 	}

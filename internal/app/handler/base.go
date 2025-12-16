@@ -26,7 +26,7 @@ type Handler struct {
 	app *app.App
 }
 
-func NewHandler(app *app.App) *Handler {
+func New(app *app.App) *Handler {
 	return &Handler{
 		app:         app,
 		BaseHandler: &BaseHandler{},

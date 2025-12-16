@@ -1,3 +1,4 @@
+// internal/dto/req.go
 package dto
 
 // c.ShouldBindUri()			uri:"age"

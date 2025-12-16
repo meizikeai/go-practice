@@ -10,7 +10,7 @@ import (
 )
 
 func Setup(app *app.App) {
-	logic := handler.NewHandler(app)
+	logic := handler.New(app)
 
 	app.Engine.GET("/", logic.SayHi)
 	app.Engine.NoRoute(logic.NoRoute)
