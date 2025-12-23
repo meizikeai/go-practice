@@ -3,6 +3,7 @@ package handler
 
 import (
 	"context"
+	"io"
 
 	"go-practice/internal/app"
 	"go-practice/internal/pkg/response"
@@ -31,6 +32,15 @@ func New(app *app.App) *Handler {
 		app:         app,
 		BaseHandler: &BaseHandler{},
 	}
+}
+
+func (h *Handler) getBody(c *gin.Context) []byte {
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return []byte{}
+	}
+
+	return body
 }
 
 func (h *Handler) SayHi(c *gin.Context) {

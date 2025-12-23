@@ -24,7 +24,6 @@ host:
 tencent_cloud:
   secret_id: ""
   secret_key: ""
-  region: "ap-beijing"
   sms:
     sdk_app_id: ""
     sign_name: ""
@@ -54,5 +53,3 @@ kafka:
   default: 
     brokers: 
       - "127.0.0.1:9092"
-    topic: "topic-test"
-    group_id: "group-test"

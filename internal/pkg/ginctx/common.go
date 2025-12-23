@@ -2,49 +2,41 @@
 package ginctx
 
 import (
-	"io"
-	"strings"
-
-	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func GetBody(c *gin.Context) []byte {
-	body, err := io.ReadAll(c.Request.Body)
-	if err != nil {
-		return []byte{}
+func GetReqID(req *http.Request) string {
+	return req.Header.Get("X-Request-Id")
+}
+
+func GetClientIP(req *http.Request) string {
+	ip := req.Header.Get("x-real-ip")
+
+	if len(ip) == 0 {
+		ip = req.Header.Get("x-forwarded-for")
 	}
 
-	return body
+	return ip
 }
 
-func GetReqID(c *gin.Context) string {
-	if reqID := c.GetHeader("X-Request-Id"); reqID != "" {
-		return reqID
+func GetRemoteIP(req *http.Request) string {
+	return req.RemoteAddr
+}
+
+func GetUserAgent(req *http.Request) string {
+	return req.UserAgent()
+}
+
+func GetHeader(req *http.Request) map[string]string {
+	ip := GetClientIP(req)
+	id := GetReqID(req)
+
+	result := map[string]string{
+		"id": id,
+		"ip": ip,
+		"rp": req.RemoteAddr,
+		"ua": req.UserAgent(),
 	}
-	return ""
-}
 
-func GetClientIP(c *gin.Context) string {
-	return c.ClientIP()
-}
-
-func GetRemoteIP(c *gin.Context) string {
-	return c.RemoteIP()
-}
-
-func GetUserAgent(c *gin.Context) string {
-	return c.GetHeader("User-Agent")
-}
-
-func GetToken(c *gin.Context) string {
-	headers := []string{"Authorization", "Token"}
-	for _, h := range headers {
-		if val := c.GetHeader(h); val != "" {
-			if strings.HasPrefix(strings.ToLower(val), "bearer ") {
-				return strings.TrimSpace(val[7:])
-			}
-			return val
-		}
-	}
-	return c.Query("token")
+	return result
 }

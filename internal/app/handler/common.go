@@ -15,7 +15,7 @@ func (h *Handler) TestGet(c *gin.Context) {
 func (h *Handler) TestPost(c *gin.Context) {
 	h.app.Service.GetUser(ctx, 7758258)
 
-	h.app.Log.Info("get user", []zap.Field{zap.String("ip", ginctx.GetClientIP(c))}...)
+	h.app.Log.Info("get user", []zap.Field{zap.String("ip", ginctx.GetClientIP(c.Request))}...)
 
 	// ciphertext, _ := h.app.Crypto.Encrypt("AbcDefg8886")
 	// plaintext, _ := h.app.Crypto.Decrypt(ciphertext)

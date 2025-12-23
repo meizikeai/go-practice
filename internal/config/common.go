@@ -44,8 +44,6 @@ type RedisInstance struct {
 
 type KafkaInstance struct {
 	Brokers []string `mapstructure:"brokers"`
-	Topic   string   `mapstructure:"topic"`
-	GroupID string   `mapstructure:"group_id"`
 }
 
 type CryptoKeyInstance struct {

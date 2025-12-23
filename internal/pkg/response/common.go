@@ -46,13 +46,10 @@ var codeMsg = map[Code]string{
 	CodeDBError:      "Database Error",
 }
 
-type Responder struct {
-	req_id string
-}
+type Responder struct{}
 
 func NewResponder(c *gin.Context) *Responder {
-	rid := c.Request.Header.Get("x-request-id")
-	return &Responder{req_id: rid}
+	return &Responder{}
 }
 
 func (r *Responder) JSON(c *gin.Context, httpStatus int, code Code, data any, overrides ...string) {
@@ -65,7 +62,6 @@ func (r *Responder) JSON(c *gin.Context, httpStatus int, code Code, data any, ov
 		Code:    int(code),
 		Message: msg,
 		Data:    data,
-		TraceID: r.req_id,
 	})
 }
 
