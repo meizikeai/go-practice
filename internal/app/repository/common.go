@@ -17,7 +17,7 @@ type repository struct {
 	db    *mysql.Clients
 	fetch *fetch.Fetch
 	log   *zap.Logger
-	host  map[string]string
+	lb    map[string]string
 }
 
 func New(
@@ -25,14 +25,14 @@ func New(
 	db *mysql.Clients,
 	fetch *fetch.Fetch,
 	log *zap.Logger,
-	host map[string]string,
+	lb map[string]string,
 ) Repository {
 	return &repository{
 		cache,
 		db,
 		fetch,
 		log,
-		host,
+		lb,
 	}
 }
 

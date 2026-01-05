@@ -12,9 +12,10 @@ import (
 func Setup(app *app.App) {
 	logic := handler.New(app)
 
-	app.Engine.GET("/", logic.SayHi)
 	app.Engine.NoRoute(logic.NoRoute)
 	app.Engine.NoMethod(logic.NoMethod)
+
+	app.Engine.GET("/", logic.SayHi)
 	app.Engine.GET("/metrics", prometheus.PromHandler(promhttp.Handler()))
 
 	app.Engine.GET("/test/get", logic.TestGet)

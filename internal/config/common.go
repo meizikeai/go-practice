@@ -12,7 +12,7 @@ import (
 type Config struct {
 	App          App                        `mapstructure:"app"`
 	CryptoKey    CryptoKeyInstance          `mapstructure:"crypto"`
-	Host         map[string]string          `mapstructure:"host"`
+	LB           map[string]string          `mapstructure:"lb"`
 	JwtKey       JwtKeyInstance             `mapstructure:"jwt"`
 	Kafka        map[string]KafkaInstance   `mapstructure:"kafka"`
 	MySQL        map[string][]MySQLInstance `mapstructure:"mysql"`

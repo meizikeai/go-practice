@@ -4,7 +4,7 @@ app:
 
 crypto:
   current: "5YSvRvUHg="
-  old:     "2V1Evn8e8="
+  old: "2V1Evn8e8="
 
 jwt:
   current_key_id: "2025-08"
@@ -18,7 +18,7 @@ jwt:
     MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDOuy8tHIMW+Ljg...
     -----END PRIVATE KEY-----
 
-host:
+lb:
   test: "127.0.0.1:3000"
 
 tencent_cloud:
@@ -38,7 +38,7 @@ mysql:
       - "database:password@tcp(127.0.0.1:3306)/tablename"
     max_idle_conns: 100
     max_open_conns: 200
-    conn_max_lifetime: 300
+    conn_max_lifetime: 60
 
 redis:
   default:
@@ -46,10 +46,10 @@ redis:
       - "127.0.0.1:6379"
     password: ""
     db: 0
-    pool_size: 20
+    pool_size: 40
     min_idle_conns: 10
 
 kafka:
-  default: 
-    brokers: 
+  default:
+    brokers:
       - "127.0.0.1:9092"

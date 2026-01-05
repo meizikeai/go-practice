@@ -67,7 +67,7 @@ func NewApp(mock ...Mock) *App {
 		db,
 		fetch,
 		record,
-		cfg.Host,
+		cfg.LB,
 	)
 	app.Service = service.New(
 		cfg.App.Mode,
