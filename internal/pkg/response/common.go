@@ -25,6 +25,7 @@ const (
 	CodeMethodNotAllowed    Code = 405
 	CodeUnprocessableEntity Code = 422
 	CodeInternalServerError Code = 500
+	CodeServiceUnavailable  Code = 503
 
 	// Custom code
 	CodeUserNotFound Code = 100001
@@ -40,6 +41,7 @@ var codeMsg = map[Code]string{
 	CodeMethodNotAllowed:    "Method Not Allowed",
 	CodeUnprocessableEntity: "Unprocessable Entity",
 	CodeInternalServerError: "Internal Server Error",
+	CodeServiceUnavailable:  "Service Unavailable",
 
 	// Custom code
 	CodeUserNotFound: "User Not Found",
@@ -79,7 +81,7 @@ func (r *Responder) Fail(c *gin.Context, code Code, overrides ...string) {
 }
 
 func (r *Responder) Error(c *gin.Context, err error) {
-	r.JSON(c, http.StatusInternalServerError, CodeDBError, nil, err.Error())
+	r.JSON(c, http.StatusInternalServerError, CodeInternalServerError, nil, err.Error())
 }
 
 func codeToHTTPStatus(code Code) int {
@@ -98,6 +100,8 @@ func codeToHTTPStatus(code Code) int {
 		return http.StatusUnprocessableEntity
 	case 500:
 		return http.StatusInternalServerError
+	case 503:
+		return http.StatusServiceUnavailable
 	default:
 		if code != CodeOK {
 			return http.StatusInternalServerError
