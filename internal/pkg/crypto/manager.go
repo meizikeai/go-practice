@@ -4,8 +4,9 @@ package crypto
 import (
 	"errors"
 	"fmt"
-	"go-practice/internal/config"
 	"sync"
+
+	"go-practice/internal/config"
 )
 
 type Manager struct {
