@@ -21,15 +21,6 @@ jwt:
 lb:
   test: "127.0.0.1:3000"
 
-tencent_cloud:
-  secret_id: ""
-  secret_key: ""
-  sms:
-    sdk_app_id: ""
-    sign_name: ""
-  ses:
-    from_email: ""
-
 mysql:
   default:
     master:

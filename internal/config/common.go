@@ -10,14 +10,13 @@ import (
 )
 
 type Config struct {
-	App          App                        `mapstructure:"app"`
-	CryptoKey    CryptoKeyInstance          `mapstructure:"crypto"`
-	LB           map[string]string          `mapstructure:"lb"`
-	JwtKey       JwtKeyInstance             `mapstructure:"jwt"`
-	Kafka        map[string]KafkaInstance   `mapstructure:"kafka"`
-	MySQL        map[string][]MySQLInstance `mapstructure:"mysql"`
-	Redis        map[string][]RedisInstance `mapstructure:"redis"`
-	TencentCloud TencentCloudInstance       `mapstructure:"tencent_cloud"`
+	App       App                        `mapstructure:"app"`
+	CryptoKey CryptoKeyInstance          `mapstructure:"crypto"`
+	LB        map[string]string          `mapstructure:"lb"`
+	JwtKey    JwtKeyInstance             `mapstructure:"jwt"`
+	Kafka     map[string]KafkaInstance   `mapstructure:"kafka"`
+	MySQL     map[string][]MySQLInstance `mapstructure:"mysql"`
+	Redis     map[string][]RedisInstance `mapstructure:"redis"`
 }
 
 type App struct {
@@ -56,21 +55,6 @@ type JwtKeyInstance struct {
 	CurrentKey   string `mapstructure:"current_key"`    // PEM
 	OldKeyID     string `mapstructure:"old_key_id"`     // Optional
 	OldKey       string `mapstructure:"old_key"`        // Optional
-}
-
-type TencentCloudInstance struct {
-	SecretID  string `mapstructure:"secret_id"`
-	SecretKey string `mapstructure:"secret_key"`
-	Region    string `mapstructure:"region"`
-
-	SMS struct {
-		SdkAppID string `mapstructure:"sdk_app_id"`
-		SignName string `mapstructure:"sign_name"`
-	} `mapstructure:"sms"`
-
-	SES struct {
-		FromEmail string `mapstructure:"from_email"`
-	} `mapstructure:"ses"`
 }
 
 func Load() *Config {
